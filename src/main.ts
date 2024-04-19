@@ -4,7 +4,7 @@ import 'normalize.css'
 import ElementUI from 'element-ui'
 import SvgIcon from 'vue-svgicon'
 import VueAreaLinkage from 'vue-area-linkage'
-import moment from 'moment'
+import moment, { locale } from 'moment'
 import '@/styles/element-variables.scss'
 import '@/styles/index.scss'
 import '@/styles/home.scss'
@@ -19,8 +19,9 @@ import router from '@/router'
 import '@/icons/components'
 import '@/permission'
 import { checkProcessEnv } from '@/utils/common'
+import enLocale from './element-en'
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, {locale:enLocale})
 Vue.use(VueAreaLinkage)
 Vue.use(SvgIcon, {
   'tagName': 'svg-icon',

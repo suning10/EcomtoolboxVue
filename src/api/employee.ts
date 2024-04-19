@@ -26,3 +26,10 @@ export const login = (data: any) =>
     'method': 'get',
     'params':params
   })
+
+  export const updateEmployeeStatus = (params: any) =>
+    request({
+      'url': `/employee/status/${params.status}`,
+      'method': 'post',
+      'params':{'id': params.id}
+    })
