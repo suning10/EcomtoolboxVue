@@ -8,7 +8,7 @@
         </label>
         <el-input class = "tableBar" placeholder="please enter name" style="width: 15%;"/>
         <el-button type="primary" style="margin-left: 25px;" @click="pageQuery">search</el-button>
-        <el-button type="primary" style="float:right">Add new Employee</el-button>
+        <el-button type="primary" style="float:right" @click = "addNewEmployee">Add new Employee</el-button>
 
 
       </div>
@@ -125,8 +125,9 @@ export default  {
           }
         })
         })
-        
-
+      },
+      addNewEmployee(){
+        this.$router.push('/employee/add')
       }
 
   }

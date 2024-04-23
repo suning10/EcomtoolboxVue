@@ -35,6 +35,29 @@
 <script lang="ts">
 
 export default {
+
+  data() { return{
+    //ruleForm here must align with the prop
+    ruleForm: {
+      username:'',
+      name : '',
+      phone:'',
+      sex:'1',
+      id:''
+    },
+    // form prop rules
+    rules: {
+      name: [
+        {required:true, message:'please enter a correct name', trigger:'blur'}
+      ],
+      username: [
+        {required:true, message:'please enter a correct username', trigger:'blur'}
+      ],
+
+    }
+  }
+
+  }
   
 }
 </script>
