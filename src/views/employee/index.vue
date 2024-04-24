@@ -135,7 +135,6 @@ export default  {
             query:{'id':rid}
           }
         )
-
       }
 
   }

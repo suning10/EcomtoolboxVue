@@ -40,3 +40,16 @@ export const login = (data: any) =>
         'method': 'post',
         'data': params
       })
+
+  export const getEmployeebyId = (id: any) =>
+    request({
+      'url': `/employee/${id}`,
+      'method': 'get'
+    })
+
+  export const updateEmployee = (params: any) =>
+    request({
+      'url': `/employee/`,
+      'method': 'put',
+      'data':params
+    })

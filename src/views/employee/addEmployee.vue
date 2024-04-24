@@ -33,10 +33,19 @@
 </template>
 
 <script lang="ts">
-import { addEmployee } from '@/api/employee'
+import { addEmployee, getEmployeebyId, updateEmployee } from '@/api/employee'
 
 
 export default {
+
+  created() {
+    this.optType = this.$route.query.id ? 'update' : 'add'
+    getEmployeebyId(this.$route.query.id).then((res) =>{
+      if(res.data.code === 1){
+        this.ruleForm = res.data.data
+      }
+    })
+  },
 
   data() { return{
     optType: 'add',
@@ -77,12 +86,13 @@ export default {
         if(valid){
           // pass validation
           console.log("pass validation")
-          addEmployee(this.ruleForm).then((res) =>{
+          //check if operation type = update or add
+          if(this.optType === 'add'){
+            addEmployee(this.ruleForm).then((res) =>{
             if(res.data.code === 1){
               this.$message.success("save successfully")
 
               if(flagContinue){
-                this.optType = 'add'
                 this.ruleForm = {
                   username:'',
                   name : '',
@@ -97,6 +107,19 @@ export default {
               this.$message.error("fail to save, please correct highlighted lines")
             }
           })
+          }else{
+
+            updateEmployee(this.ruleForm).then(res =>{
+              if(res.data.code === 1){
+                this.$message.success("save successfully")
+                this.$router.push('/employee')
+              }else{
+                this.$message.error(res.data.msg);
+                
+              }
+            })
+          }
+
         }
       })
     }
