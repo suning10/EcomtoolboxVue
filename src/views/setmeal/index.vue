@@ -5,7 +5,7 @@
         <label style="margin-right: 10px;">Meal Name</label>
         <el-input style="width:12%" clearable />
         <label style="margin-right: 10px; margin-left: 15px">Category</label>
-        <el-select v-model="categoryId" placeholder="please choose">
+        <el-select v-model="categoryId" placeholder="please choose" clearable>
           <el-option 
             v-for="item in categoryId"
             :key = "item.id"
@@ -28,6 +28,45 @@
           <el-button type = "info">+ create new</el-button>
         </div>
       </div>
+
+      <el-table
+      :data="records"
+      style="width: 100%">
+        <el-table-column
+          prop="name"
+          label="Name">
+        </el-table-column>
+        <el-table-column
+          prop="username"
+          label="Username">
+        </el-table-column>
+        <el-table-column
+          prop="phone"
+          label="Phone">
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="Current Status">
+          <template slot-scope="scope">
+            {{ scope.row.status === 1 ? "Enabled": "Disabled" }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="updateTime"
+          label="Last Updated Time">
+        </el-table-column>
+        <el-table-column label="Operation">
+
+          <template slot-scope="scope">
+            <el-button type="text" @click="handleEditEmployee(scope.row.id)">Edit</el-button>
+            <el-button type="text" @click="handleEnableOrDisable(scope.row)">
+              {{ scope.row.status === 0 ? "Enable": "Disable" }}
+            </el-button>
+          </template>
+
+        </el-table-column>
+
+    </el-table>
 
     </div>
   </div>
