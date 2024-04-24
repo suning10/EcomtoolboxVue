@@ -9,8 +9,6 @@
         <el-input class = "tableBar" placeholder="please enter name" style="width: 15%;"/>
         <el-button type="primary" style="margin-left: 25px;" @click="pageQuery">search</el-button>
         <el-button type="primary" style="float:right" @click = "addNewEmployee">Add new Employee</el-button>
-
-
       </div>
       <el-table
       :data="records"
@@ -41,7 +39,7 @@
       <el-table-column label="Operation">
 
         <template slot-scope="scope">
-          <el-button type="text">Edit</el-button>
+          <el-button type="text" @click="handleEditEmployee(scope.row.id)">Edit</el-button>
           <el-button type="text" @click="handleEnableOrDisable(scope.row)">
             {{ scope.row.status === 0 ? "Enable": "Disable" }}
           </el-button>
@@ -128,6 +126,16 @@ export default  {
       },
       addNewEmployee(){
         this.$router.push('/employee/add')
+      },
+
+      handleEditEmployee(rid){
+        this.$router.push(
+          {
+            path:'/employee/add' ,
+            query:{'id':rid}
+          }
+        )
+
       }
 
   }

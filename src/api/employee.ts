@@ -33,3 +33,10 @@ export const login = (data: any) =>
       'method': 'post',
       'params':{'id': params.id}
     })
+
+  export const addEmployee= (params: any) =>
+      request({
+        'url': `/employee/`,
+        'method': 'post',
+        'data': params
+      })

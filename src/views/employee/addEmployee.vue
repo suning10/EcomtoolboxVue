@@ -2,20 +2,20 @@
   <div class="addBrand-container">
     <div class="container">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="180px">
-        <el-form-item label="账号" prop="username">
+        <el-form-item label="Username" prop="username">
           <el-input v-model="ruleForm.username"></el-input>
         </el-form-item>
-        <el-form-item label="员工姓名" prop="name">
+        <el-form-item label="Name" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="Phone" prop="phone">
           <el-input v-model="ruleForm.phone"></el-input>
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
+        <el-form-item label="Sex" prop="sex">
             <el-radio v-model="ruleForm.sex" label="1">男</el-radio>
             <el-radio v-model="ruleForm.sex" label="2">女</el-radio>
         </el-form-item>
-        <el-form-item label="身份证号" prop="idNumber">
+        <el-form-item label="ID" prop="idNumber">
           <el-input v-model="ruleForm.idNumber"></el-input>
         </el-form-item>
         <div class="subBox">
@@ -33,10 +33,13 @@
 </template>
 
 <script lang="ts">
+import { addEmployee } from '@/api/employee'
+
 
 export default {
 
   data() { return{
+    optType: 'add',
     //ruleForm here must align with the prop
     ruleForm: {
       username:'',
@@ -53,10 +56,50 @@ export default {
       username: [
         {required:true, message:'please enter a correct username', trigger:'blur'}
       ],
+      phone:[{required:true, trigger:'blur',validator:(rule,value,callback) =>{
+        if(value === '' || (!/^\d{10}$/.test(value))){
+          callback( new Error("please enter correct phone number"))
+         }else{
+          callback()
+         }
+        }
+
+      }]
 
     }
   }
 
+  },
+
+  methods:{
+    submitForm(form,flagContinue){
+      this.$refs[form].validate((valid) => {
+        if(valid){
+          // pass validation
+          console.log("pass validation")
+          addEmployee(this.ruleForm).then((res) =>{
+            if(res.data.code === 1){
+              this.$message.success("save successfully")
+
+              if(flagContinue){
+                this.optType = 'add'
+                this.ruleForm = {
+                  username:'',
+                  name : '',
+                  phone:'',
+                  sex:'1',
+                  id:''
+                }
+              }else{
+                this.$router.push('/employee')
+              }
+            }else{
+              this.$message.error("fail to save, please correct highlighted lines")
+            }
+          })
+        }
+      })
+    }
   }
   
 }
