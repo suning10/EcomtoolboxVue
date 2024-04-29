@@ -8,18 +8,22 @@ import Cookies from 'js-cookie'
 
 NProgress.configure({ 'showSpinner': false })
 
-router.beforeEach(async (to: Route, _: Route, next: any) => {
-  NProgress.start()
-  if (Cookies.get('token')) {
-    next()
-  } else {
-    if (!to.meta.notNeedAuth) {
-      next('/login')
-    } else {
+
+if(process.env.VUE_APP_Enable_Login){
+  router.beforeEach(async (to: Route, _: Route, next: any) => {
+    NProgress.start()
+    if (Cookies.get('token')) {
       next()
+    } else {
+      if (!to.meta.notNeedAuth) {
+        next('/login')
+      } else {
+        next()
+      }
     }
-  }
-})
+  })
+}
+
 
 router.afterEach((to: Route) => {
   NProgress.done()
