@@ -10,14 +10,13 @@
               style="width: 149px; height: 38px"
               alt=""
             />
-            <!-- <span class="title-label">苍穹外卖</span> -->
           </div>
           <el-form-item prop="username">
             <el-input
               v-model="loginForm.username"
               type="text"
               auto-complete="off"
-              placeholder="账号"
+              placeholder="username"
               prefix-icon="iconfont icon-user"
             />
           </el-form-item>
@@ -25,7 +24,7 @@
             <el-input
               v-model="loginForm.password"
               type="password"
-              placeholder="密码"
+              placeholder="password"
               prefix-icon="iconfont icon-lock"
               @keyup.enter.native="handleLogin"
             />
@@ -39,8 +38,8 @@
               style="width: 100%"
               @click.native.prevent="handleLogin"
             >
-              <span v-if="!loading">登录</span>
-              <span v-else>登录中...</span>
+              <span v-if="!loading">Login</span>
+              <span v-else>Log you in...</span>
             </el-button>
           </el-form-item>
         </el-form>
@@ -62,18 +61,12 @@ import { isValidUsername } from '@/utils/validate'
 export default class extends Vue {
   private validateUsername = (rule: any, value: string, callback: Function) => {
     if (!value) {
-      callback(new Error('请输入用户名'))
+      callback(new Error('please enter username'))
     } else {
       callback()
     }
   }
-  private validatePassword = (rule: any, value: string, callback: Function) => {
-    if (value.length < 6) {
-      callback(new Error('密码必须在6位以上'))
-    } else {
-      callback()
-    }
-  }
+
   private loginForm = {
     username: 'admin',
     password: '123456',
@@ -83,8 +76,7 @@ export default class extends Vue {
   }
 
   loginRules = {
-    username: [{ validator: this.validateUsername, trigger: 'blur' }],
-    password: [{ validator: this.validatePassword, trigger: 'blur' }],
+    username: [{ validator: this.validateUsername, trigger: 'blur' }]
   }
   private loading = false
   private redirect?: string

@@ -8,8 +8,14 @@ import Cookies from 'js-cookie'
 
 NProgress.configure({ 'showSpinner': false })
 
+router.afterEach((to: Route) => {
+  NProgress.done()
+  document.title = to.meta.title
+})
 
-if(process.env.VUE_APP_Enable_Login){
+console.log(process.env.VUE_APP_Enable_Login)
+if(!process.env.VUE_APP_Enable_Login){
+  console.log("enterred configuration")
   router.beforeEach(async (to: Route, _: Route, next: any) => {
     NProgress.start()
     if (Cookies.get('token')) {
@@ -25,7 +31,4 @@ if(process.env.VUE_APP_Enable_Login){
 }
 
 
-router.afterEach((to: Route) => {
-  NProgress.done()
-  document.title = to.meta.title
-})
+
