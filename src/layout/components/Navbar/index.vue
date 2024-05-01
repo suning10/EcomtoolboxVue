@@ -1,29 +1,7 @@
 <template>
   <div class="navbar">
-    <div class="statusBox">
-      <hamburger id="hamburger-container"
-                 :is-active="sidebar.opened"
-                 class="hamburger-container"
-                 @toggleClick="toggleSideBar" />
-      <span v-if="status===1"
-            class="businessBtn">营业中</span>
-      <span v-else
-            class="businessBtn closing">打烊中</span>
-    </div>
-
     <div :key="restKey"
          class="right-menu">
-      <div class="rightStatus">
-        <audio ref="audioVo"
-               hidden>
-          <source src="./../../../assets/preview.mp3" type="audio/mp3" />
-        </audio>
-        <audio ref="audioVo2"
-               hidden>
-          <source src="./../../../assets/reminder.mp3" type="audio/mp3" />
-        </audio>
-        <span class="navicon operatingState" @click="handleStatus"><i />营业状态设置</span>
-      </div>
       <div class="avatar-wrapper">
         <div :class="shopShow?'userInfo':''"
              @mouseenter="toggleShow"
@@ -32,43 +10,20 @@
                      :class="shopShow?'active':''">
             {{ name }}<i class="el-icon-arrow-down" />
           </el-button>
-          <div v-if="shopShow"
+          <div
                class="userList">
             <p class="amendPwdIcon"
                @click="handlePwd">
-              修改密码<i />
+              Change Password<i />
             </p>
             <p class="outLogin"
                @click="logout">
-              退出登录<i />
+              Log Out<i />
             </p>
           </div>
         </div>
       </div>
     </div>
-    <!-- 营业状态弹层 -->
-    <el-dialog title="营业状态设置"
-               :visible.sync="dialogVisible"
-               width="25%"
-               :show-close="false">
-      <el-radio-group v-model="setStatus">
-        <el-radio :label="1">
-          营业中
-          <span>当前餐厅处于营业状态，自动接收任何订单，可点击打烊进入店铺打烊状态。</span>
-        </el-radio>
-        <el-radio :label="0">
-          打烊中
-          <span>当前餐厅处于打烊状态，仅接受营业时间内的预定订单，可点击营业中手动恢复营业状态。</span>
-        </el-radio>
-      </el-radio-group>
-      <span slot="footer"
-            class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="handleSave">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- end -->
     <!-- 修改密码 -->
     <Password :dialog-form-visible="dialogFormVisible"
               @handleclose="handlePwdClose" />
@@ -103,13 +58,9 @@ import Password from '../components/password.vue'
 export default class extends Vue {
   private storeId = this.getStoreId
   private restKey: number = 0
-  private websocket = null
   private newOrder = ''
   private message = ''
-  private audioIsPlaying = false
-  private audioPaused = false
   private statusValue = true
-  private audioUrl: './../../../assets/preview.mp3'
   private shopShow = false
   private dialogVisible = false
   private status = 1
@@ -146,97 +97,8 @@ export default class extends Vue {
     }
     return storeId
   }
-  mounted() {
-    document.addEventListener('click', this.handleClose)
-    //console.log(this.$store.state.app.statusNumber)
-    // const msg = {
-    //   data: {
-    //     type: 2,
-    //     content: '订单1653904906519客户催单，已下单23分钟，仍未接单。',
-    //     details: '434'
-    //   }
-    // }
-    this.getStatus()
-  }
-  created() {
-    this.webSocket()
-  }
-  onload() {
-  }
-  destroyed() {
-    this.websocket.close() //离开路由之后断开websocket连接
-  }
 
-  // 添加新订单提示弹窗
-  webSocket() {
-    const that = this as any
-    let clientId = Math.random().toString(36).substr(2)
-    let socketUrl = process.env.VUE_APP_SOCKET_URL + clientId
-    console.log(socketUrl, 'socketUrl')
-    if (typeof WebSocket == 'undefined') {
-      that.$notify({
-        title: '提示',
-        message: '当前浏览器无法接收实时报警信息，请使用谷歌浏览器！',
-        type: 'warning',
-        duration: 0,
-      })
-    } else {
-      this.websocket = new WebSocket(socketUrl)
-      // 监听socket打开
-      this.websocket.onopen = function () {
-        console.log('浏览器WebSocket已打开')
-      }
-      // 监听socket消息接收
-      this.websocket.onmessage = function (msg) {
-        // 转换为json对象
-        that.$refs.audioVo.currentTime = 0
-        that.$refs.audioVo2.currentTime = 0
 
-        console.log(msg, JSON.parse(msg.data), 'msg')
-        // const h = this.$createElement
-        const jsonMsg = JSON.parse(msg.data)
-        if (jsonMsg.type === 1) {
-          that.$refs.audioVo.play()
-        } else if (jsonMsg.type === 2) {
-          that.$refs.audioVo2.play()
-        }
-        that.$notify({
-          title: jsonMsg.type === 1 ? '待接单' : '催单',
-          duration: 0,
-          dangerouslyUseHTMLString: true,
-          onClick: () => {
-            that.$router
-              .push(`/order?orderId=${jsonMsg.orderId}`)
-              .catch((err) => {
-                console.log(err)
-              })
-            setTimeout(() => {
-              location.reload()
-            }, 100)
-          },
-          // 这里也可以把返回信息加入到message中显示
-          message: `${
-            jsonMsg.type === 1
-              ? `<span>您有1个<span style=color:#419EFF>订单待处理</span>,${jsonMsg.content},请及时接单</span>`
-              : `${jsonMsg.content}<span style='color:#419EFF;cursor: pointer'>去处理</span>`
-          }`,
-        })
-      }
-      // 监听socket错误
-      this.websocket.onerror = function () {
-        that.$notify({
-          title: '错误',
-          message: '服务器错误，无法接收实时报警信息',
-          type: 'error',
-          duration: 0,
-        })
-      }
-      // 监听socket关闭
-      this.websocket.onclose = function () {
-        console.log('WebSocket已关闭')
-      }
-    }
-  }
 
   private toggleSideBar() {
     AppModule.ToggleSideBar(false)
@@ -261,12 +123,7 @@ export default class extends Vue {
       this.$message.error(data.msg)
     }
   }
-  // 营业状态
-  async getStatus() {
-    const { data } = await getStatus()
-    this.status = data.data
-    this.setStatus = this.status
-  }
+
   // 下拉菜单显示
   toggleShow() {
     this.shopShow = true
@@ -284,14 +141,7 @@ export default class extends Vue {
   handleStatus() {
     this.dialogVisible = true
   }
-  // 营业状态设置
-  async handleSave() {
-    const { data } = await setStatus(this.setStatus)
-    if (data.code === 1) {
-      this.dialogVisible = false
-      this.getStatus()
-    }
-  }
+
   // 修改密码
   handlePwd() {
     this.dialogFormVisible = true

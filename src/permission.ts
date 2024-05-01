@@ -23,8 +23,8 @@ if(process.env.VUE_APP_Enable_Login === '1'){
   })
 }
 
-
 router.afterEach((to: Route) => {
   NProgress.done()
   document.title = to.meta.title
 })
+
