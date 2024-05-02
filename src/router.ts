@@ -28,12 +28,12 @@ const router = new Router({
     {
       path: "/login",
       component: () => import("@/views/login/index.vue"),
-      meta: { title: "苍穹外卖", hidden: true, notNeedAuth: true }
+      meta: { title: "Ecom ToolBox", hidden: true, notNeedAuth: true }
     },
     {
       path: "/404",
       component: () => import("@/views/404.vue"),
-      meta: { title: "苍穹外卖", hidden: true, notNeedAuth: true }
+      meta: { title: "Ecom ToolBox", hidden: true, notNeedAuth: true }
     },
     {
       path: "/",
@@ -123,6 +123,15 @@ const router = new Router({
           meta: {
             title: "添加套餐",
             hidden: true
+          }
+        },
+
+        {
+          path: "NPS",
+          component: () => import("@/views/NPS/index.vue"),
+          meta: {
+            title: "NPS Search",
+            icon: "icon-category"
           }
         }
       ]
