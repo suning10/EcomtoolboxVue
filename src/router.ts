@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Layout from "@/layout/index.vue";
+import importNPS from "@/views/NPS/importNPS.vue";
 // import {
 //   getToken,
 //   setToken,
@@ -106,6 +107,7 @@ const router = new Router({
             title: "员工管理",
             icon: "icon-employee"
           }
+
         },
         
         {
@@ -130,10 +132,86 @@ const router = new Router({
           path: "NPS",
           component: () => import("@/views/NPS/index.vue"),
           meta: {
-            title: "NPS Search",
-            icon: "icon-category"
-          }
+            title: "NPS",
+          },
+          children:[
+            {
+              path: "/NPS/import",
+              component: () => import("@/views/NPS/importNPS.vue"),
+              meta: {
+                title: "NPSImport",
+                icon: "icon-category",
+                subgroup: true
+              }
+            },
+            {
+              path: "/NPS/search",
+              component: () => import("@/views/orderDetails/index.vue"),
+              meta: {
+                title: "NPSSearch",
+                icon: "icon-category",
+                subgroup:true
+              }
+            }
+          ]
+        },
+
+        {
+          path: "AgedReturn",
+          component: () => import("@/views/ageReturn/index.vue"),
+          meta: {
+            title: "Aged Return",
+          },
+          children:[
+            {
+              path: "/import",
+              component: () => import("@/views/ageReturn/importAgeReturn.vue"),
+              meta: {
+                title: "Aged Return Research",
+                icon: "icon-category",
+                subgroup: true
+              }
+            },
+            {
+              path: "/search",
+              component: () => import("@/views/orderDetails/index.vue"),
+              meta: {
+                title: "Aged Return Search",
+                icon: "icon-category",
+                subgroup:true
+              }
+            }
+          ]
+        },
+
+        {
+          path: "SCR",
+          component: () => import("@/views/ageReturn/index.vue"),
+          meta: {
+            title: "SCR",
+          },
+          children:[
+            {
+              path: "/import",
+              component: () => import("@/views/ageReturn/importAgeReturn.vue"),
+              meta: {
+                title: "SCR Import",
+                icon: "icon-category",
+                subgroup: true
+              }
+            },
+            {
+              path: "/search",
+              component: () => import("@/views/orderDetails/index.vue"),
+              meta: {
+                title: "SCR Search",
+                icon: "icon-category",
+                subgroup:true
+              }
+            }
+          ]
         }
+
       ]
     },
     {

@@ -30,7 +30,7 @@
           </el-menu-item>
         </sidebar-item-link>
       </template>
-      <el-submenu v-else :index="resolvePath(item.path)" popper-append-to-body>
+      <el-menu-item-group v-else :index="resolvePath(item.path)" popper-append-to-body>
         <template slot="title">
           <i
             v-if="item.meta && item.meta.icon"
@@ -52,7 +52,7 @@
             class="nest-menu"
           />
         </template>
-      </el-submenu>
+        </el-menu-item-group>
     </div>
   </div>
 </template>
