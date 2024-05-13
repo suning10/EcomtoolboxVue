@@ -59,74 +59,74 @@ const router = new Router({
         //     icon: "icon-statistics"
         //   }
         // },
-        // {
-        //   path: "order",
-        //   component: () => import("@/views/orderDetails/index.vue"),
-        //   meta: {
-        //     title: "订单管理",
-        //     icon: "icon-order"
-        //   }
-        // },
-        // {
-        //   path: "setmeal",
-        //   component: () => import("@/views/setmeal/index.vue"),
-        //   meta: {
-        //     title: "套餐管理",
-        //     icon: "icon-combo"
-        //   }
-        // },
-        // {
-        //   path: "dish",
-        //   component: () => import("@/views/dish/index.vue"),
-        //   meta: {
-        //     title: "菜品管理",
-        //     icon: "icon-dish"
-        //   }
-        // },
-        // {
-        //   path: "/dish/add",
-        //   component: () => import("@/views/dish/addDishtype.vue"),
-        //   meta: {
-        //     title: "添加菜品",
-        //     hidden: true
-        //   }
-        // },
+        {
+          path: "order",
+          component: () => import("@/views/orderDetails/index.vue"),
+          meta: {
+            title: "订单管理",
+            icon: "icon-order"
+          }
+        },
+        {
+          path: "setmeal",
+          component: () => import("@/views/setmeal/index.vue"),
+          meta: {
+            title: "套餐管理",
+            icon: "icon-combo"
+          }
+        },
+        {
+          path: "dish",
+          component: () => import("@/views/dish/index.vue"),
+          meta: {
+            title: "菜品管理",
+            icon: "icon-dish"
+          }
+        },
+        {
+          path: "/dish/add",
+          component: () => import("@/views/dish/addDishtype.vue"),
+          meta: {
+            title: "添加菜品",
+            hidden: true
+          }
+        },
         
-        // {
-        //   path: "category",
-        //   component: () => import("@/views/category/index.vue"),
-        //   meta: {
-        //     title: "分类管理",
-        //     icon: "icon-category"
-        //   }
-        // },
-        // {
-        //   path: "employee",
-        //   component: () => import("@/views/employee/index.vue"),
-        //   meta: {
-        //     title: "员工管理",
-        //     icon: "icon-employee"
-        //   }
+        {
+          path: "category",
+          component: () => import("@/views/category/index.vue"),
+          meta: {
+            title: "分类管理",
+            icon: "icon-category"
+          }
+        },
+        {
+          path: "employee",
+          component: () => import("@/views/employee/index.vue"),
+          meta: {
+            title: "员工管理",
+            icon: "icon-employee"
+          }
 
-        // },
+        },
         
-        // {
-        //   path: "/employee/add",
-        //   component: () => import("@/views/employee/addEmployee.vue"),
-        //   meta: {
-        //     title: "添加/修改员工",
-        //     hidden: true
-        //   }
-        // },
+        {
+          path: "/employee/add",
+          component: () => import("@/views/employee/addEmployee.vue"),
+          meta: {
+            title: "添加/修改员工",
+            hidden: true
+          }
+        },
         
-        // {
-        //   path: "/setmeal/add",
-        //   component: () => import("@/views/setmeal/addSetmeal.vue"),
-        //   meta: {
-        //     title: "添加套餐",
-        //     hidden: true
-        //   }
-        // },
+        {
+          path: "/setmeal/add",
+          component: () => import("@/views/setmeal/addSetmeal.vue"),
+          meta: {
+            title: "添加套餐",
+            hidden: true
+          }
+        },
 
         {
           path: "NPS",
@@ -164,17 +164,17 @@ const router = new Router({
           },
           children:[
             {
-              path: "/import",
+              path: "/AgedReturn/import",
               component: () => import("@/views/ageReturn/importAgeReturn.vue"),
               meta: {
-                title: "Aged Return Research",
+                title: "Aged Return Import",
                 icon: "icon-category",
                 subgroup: true
               }
             },
             {
-              path: "/search",
-              component: () => import("@/views/orderDetails/index.vue"),
+              path: "/AgedReturn/search",
+              component: () => import("@/views/ageReturn/ageReturnSearch.vue"),
               meta: {
                 title: "Aged Return Search",
                 icon: "icon-category",

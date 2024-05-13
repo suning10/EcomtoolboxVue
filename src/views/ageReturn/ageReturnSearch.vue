@@ -1,0 +1,201 @@
+<template>
+
+<div class="addBrand-container">
+    <div class="container">
+
+        <el-form ref="form" :model="ruleform " label-width="120px" v-if="!displayResult">
+
+          <el-form-item label = "Search By">
+            <el-select v-model=emptyRDO placeholder="Select" >
+              <el-option
+                label="RDO"
+                :value=true>
+              </el-option>
+              <el-option
+                label="PO&SKU"
+                :value=false>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="RDOs" v-if="emptyRDO">
+              <el-input type="textarea" v-model="ruleform .desc" 
+              placeholder="please enter RDO (Start with 8) here" 
+              :rows="30"
+              maxlength="100px"
+              ></el-input>
+          </el-form-item>
+          <el-form-item label="PO&SKUs" v-else>
+              <el-input type="textarea" v-model="ruleform.desc" 
+              placeholder="please enter PO and SKU here eg. sa1234567SM-F721"
+              :rows="30"
+              maxlength="100px"
+              >
+              </el-input>
+
+          </el-form-item>
+          <el-form-item v-if="emptyRDO">
+              <el-button type="primary" @click="handleTest">Search Return Tracking</el-button>
+          </el-form-item>
+
+          <el-form-item v-else>
+              <el-button type="primary" @click="handleTest">PO&SKU Search</el-button>
+          </el-form-item>
+
+        </el-form>
+        <div v-else>
+          <el-table 
+          :data="tableData"
+          border
+          style="width: 100%">
+            <el-table-column
+              prop="date"
+              label="Date"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="Name"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="address"
+              label="Address">
+            </el-table-column>
+          </el-table>
+
+          <el-button type="primary" @click="exportToCSV">exportToCSV</el-button>
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+</template>
+    
+<script lang="ts">
+
+import { Vue,Component} from 'vue-property-decorator'
+@Component({
+    name: 'AgeReturnSearch'
+
+  })
+export default class extends Vue
+{
+
+
+    private ruleform = {
+
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+    }
+
+    private emptyRDO = true;
+    private displayResult = false;
+
+
+    private tableData = [{
+          date: '2016-05-03',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-02',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-04',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-01',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }];
+
+
+    private handleTest(){
+      console.log(this.tableData)
+      this.displayResult = !this.displayResult;
+            }
+
+    private exportToCSV() {
+      const csvContent = this.convertToCSV(this.tableData);
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'data.csv';
+      link.click();
+    }
+    private convertToCSV(data) {
+      const header = Object.keys(data[0]).join(',');
+      const rows = data.map(row => {
+        return Object.values(row).map(value => {
+          // If the value contains a comma, enclose it in double quotes
+          if (typeof value === 'string' && value.includes(',')) {
+            return `"${value}"`;
+          } else {
+            return value;
+          }
+        }).join(',');
+      });
+      return header + '\n' + rows.join('\n');
+    }
+
+}
+
+
+      
+ 
+</script>
+
+<style lang="scss" scoped>
+.addBrand {
+  &-container {
+    margin: 30px;
+    margin-top: 30px;
+    .HeadLable {
+      background-color: transparent;
+      margin-bottom: 0px;
+      padding-left: 0px;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      background: #fff;
+      padding: 30px;
+      border-radius: 4px;
+      // min-height: 500px;
+      .subBox {
+        padding-top: 30px;
+        text-align: center;
+        border-top: solid 1px $gray-5;
+      }
+    }
+    .idNumber {
+      margin-bottom: 39px;
+    }
+
+    .el-form-item {
+      margin-bottom: 29px;
+    }
+
+    .el-textarea{
+      width: 50%;
+    }
+    .el-input {
+      width: 100%;
+    }
+    .el-button{
+        text-align: center;
+    }
+  }
+}
+</style>

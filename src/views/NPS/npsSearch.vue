@@ -1,33 +1,40 @@
 <template>
-    <div class="addBrand-container">
-      <div class="container">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="180px">
-          <el-form-item label="Username" prop="username">
-            <el-input v-model="ruleForm.username"></el-input>
-          </el-form-item>
-          <el-form-item label="Name" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="Phone" prop="phone">
-            <el-input v-model="ruleForm.phone"></el-input>
-          </el-form-item>
-          <el-form-item label="Sex" prop="sex">
-              <el-radio v-model="ruleForm.sex" label="1">男</el-radio>
-              <el-radio v-model="ruleForm.sex" label="2">女</el-radio>
-          </el-form-item>
-          <el-form-item label="ID" prop="idNumber">
-            <el-input v-model="ruleForm.idNumber"></el-input>
-          </el-form-item>
-          <div class="subBox">
-            <el-button type="primary" @click="submitForm('ruleForm',false)">保存</el-button>
-            <el-button 
-              v-if="this.optType === 'add'" 
-              type="primary" 
-              @click="submitForm('ruleForm',true)">保存并继续添加员工
-            </el-button>
-            <el-button @click="() => this.$router.push('/employee')">返回</el-button>
-          </div>
-        </el-form>
-      </div>
-    </div>
-  </template>
+
+<div>
+<el-page-header  content="Aged Return Search">
+</el-page-header>
+<el-form ref="form" :model="form" label-width="120px">
+  <el-form-item label="RDOs">
+    <el-input type="textarea" v-model="form.desc" placeholder="please enter RDO (Start with 8) here"></el-input>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" @click="onSubmit">Search Return Tracking</el-button>
+  </el-form-item>
+</el-form>
+<div>
+</template>
+
+<script>
+
+  export default {
+    data() {
+      return {
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        }
+      }
+    },
+    methods: {
+      onSubmit() {
+        console.log('submit!');
+      }
+    }
+  }
+</script>
