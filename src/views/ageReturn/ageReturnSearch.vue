@@ -18,27 +18,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label="RDOs" v-if="emptyRDO">
-              <el-input type="textarea" v-model="ruleform .desc" 
+              <el-input type="textarea" v-model="ruleform.id" 
               placeholder="please enter RDO (Start with 8) here" 
-              :rows="30"
-              maxlength="100px"
+              rows="30"
               ></el-input>
           </el-form-item>
           <el-form-item label="PO&SKUs" v-else>
-              <el-input type="textarea" v-model="ruleform.desc" 
+              <el-input type="textarea" v-model="ruleform.poId" 
               placeholder="please enter PO and SKU here eg. sa1234567SM-F721"
-              :rows="30"
-              maxlength="100px"
+              rows="30"
               >
               </el-input>
 
           </el-form-item>
           <el-form-item v-if="emptyRDO">
-              <el-button type="primary" @click="handleTest">Search Return Tracking</el-button>
+              <el-button type="primary" @click="rdoSearch">Search Return Tracking</el-button>
           </el-form-item>
 
           <el-form-item v-else>
-              <el-button type="primary" @click="handleTest">PO&SKU Search</el-button>
+              <el-button type="primary" @click="poSearch">PO&SKU Search</el-button>
           </el-form-item>
 
         </el-form>
@@ -48,22 +46,52 @@
           border
           style="width: 100%">
             <el-table-column
-              prop="date"
-              label="Date"
+              prop="poLookupKey"
+              label="poLookupKey"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="name"
-              label="Name"
+              prop="rdoId"
+              label="rdo"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="address"
-              label="Address">
+              prop="returnTrackingId"
+              label="returnTrackingId"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="poId"
+              label="poId">
+            </el-table-column>
+            <el-table-column
+              prop="trackingId"
+              label="Outbound Tracking"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="sku"
+              label="sku"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="rsoId"
+              label="rsoId">
+            </el-table-column>
+            <el-table-column
+              prop="refundDt"
+              label="refundDt"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="currentRefundStatus"
+              label="currentRefundStatus">
             </el-table-column>
           </el-table>
 
-          <el-button type="primary" @click="exportToCSV">exportToCSV</el-button>
+          <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
+          <el-button type="primary" @click="goBack(false)">Back</el-button>
+          <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
 
         </div>
 
@@ -77,6 +105,8 @@
     
 <script lang="ts">
 
+import { searchByPO, searchByRDO } from '@/api/return';
+
 import { Vue,Component} from 'vue-property-decorator'
 @Component({
     name: 'AgeReturnSearch'
@@ -88,43 +118,64 @@ export default class extends Vue
 
     private ruleform = {
 
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        id: '',
+        poId:''
     }
 
     private emptyRDO = true;
     private displayResult = false;
 
 
-    private tableData = [{
-          date: '2016-05-03',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }, {
-          date: '2016-05-02',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }, {
-          date: '2016-05-04',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }, {
-          date: '2016-05-01',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }];
+    private tableData = [];
 
 
-    private handleTest(){
-      console.log(this.tableData)
-      this.displayResult = !this.displayResult;
-            }
+    private rdoSearch(){
+
+      if(this.ruleform.id.length > 1){
+        const data = this.ruleform.id.split('\n').filter(
+            item => item.trim().length > 0
+          )
+          const d = Array.from(new Set(data))
+        const payload = {'rdo':d};
+        searchByRDO(payload).then((res) =>{
+        if(res.data.code === 1){
+          console.log(res.data);
+          this.tableData = res.data.data
+          console.log(this.tableData)
+        }
+      })
+        this.displayResult = !this.displayResult;
+      } 
+
+      else{
+        this.$message.error('Please enter RDO or PO&SKU ')
+      }
+
+    }
+
+    private poSearch(){
+
+        if(this.ruleform.poId.length > 1){
+          // split by \n and remove blank
+          const data = this.ruleform.poId.split('\n').filter(
+            item => item.trim().length > 0
+          )
+          const d = Array.from(new Set(data))
+
+          const payload = {'rdo':d};
+          searchByPO(payload).then((res) =>{
+          if(res.data.code === 1){
+            this.tableData = res.data.data
+          }
+        })
+          this.displayResult = !this.displayResult;
+        } 
+
+        else{
+          this.$message.error('Please enter RDO or PO&SKU ')
+        }
+
+    }
 
     private exportToCSV() {
       const csvContent = this.convertToCSV(this.tableData);
@@ -147,6 +198,17 @@ export default class extends Vue
         }).join(',');
       });
       return header + '\n' + rows.join('\n');
+    }
+
+    private goBack(clean:boolean){
+      if(clean){
+        this.ruleform = {
+
+        id: '',
+        poId:''
+        }
+      }
+      this.displayResult = !this.displayResult;
     }
 
 }
