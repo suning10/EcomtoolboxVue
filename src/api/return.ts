@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export const searchByRDO = (data: any) =>
     request({
-      'url': 'return/byRDO',
+      'url': 'ageReturn/byRDO',
       'method': 'post',
       data: data
     })
 
 export const searchByPO = (data: any) =>
   request({
-    'url': 'return/byPO',
+    'url': 'ageReturn/byPO',
     'method': 'post',
     data: data
   })

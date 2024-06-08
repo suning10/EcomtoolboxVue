@@ -59,74 +59,74 @@ const router = new Router({
         //     icon: "icon-statistics"
         //   }
         // },
-        {
-          path: "order",
-          component: () => import("@/views/orderDetails/index.vue"),
-          meta: {
-            title: "订单管理",
-            icon: "icon-order"
-          }
-        },
-        {
-          path: "setmeal",
-          component: () => import("@/views/setmeal/index.vue"),
-          meta: {
-            title: "套餐管理",
-            icon: "icon-combo"
-          }
-        },
-        {
-          path: "dish",
-          component: () => import("@/views/dish/index.vue"),
-          meta: {
-            title: "菜品管理",
-            icon: "icon-dish"
-          }
-        },
-        {
-          path: "/dish/add",
-          component: () => import("@/views/dish/addDishtype.vue"),
-          meta: {
-            title: "添加菜品",
-            hidden: true
-          }
-        },
+        // {
+        //   path: "order",
+        //   component: () => import("@/views/orderDetails/index.vue"),
+        //   meta: {
+        //     title: "订单管理",
+        //     icon: "icon-order"
+        //   }
+        // },
+        // {
+        //   path: "setmeal",
+        //   component: () => import("@/views/setmeal/index.vue"),
+        //   meta: {
+        //     title: "套餐管理",
+        //     icon: "icon-combo"
+        //   }
+        // },
+        // {
+        //   path: "dish",
+        //   component: () => import("@/views/dish/index.vue"),
+        //   meta: {
+        //     title: "菜品管理",
+        //     icon: "icon-dish"
+        //   }
+        // },
+        // {
+        //   path: "/dish/add",
+        //   component: () => import("@/views/dish/addDishtype.vue"),
+        //   meta: {
+        //     title: "添加菜品",
+        //     hidden: true
+        //   }
+        // },
         
-        {
-          path: "category",
-          component: () => import("@/views/category/index.vue"),
-          meta: {
-            title: "分类管理",
-            icon: "icon-category"
-          }
-        },
-        {
-          path: "employee",
-          component: () => import("@/views/employee/index.vue"),
-          meta: {
-            title: "员工管理",
-            icon: "icon-employee"
-          }
+        // {
+        //   path: "category",
+        //   component: () => import("@/views/category/index.vue"),
+        //   meta: {
+        //     title: "分类管理",
+        //     icon: "icon-category"
+        //   }
+        // },
+        // {
+        //   path: "employee",
+        //   component: () => import("@/views/employee/index.vue"),
+        //   meta: {
+        //     title: "员工管理",
+        //     icon: "icon-employee"
+        //   }
 
-        },
+        // },
         
-        {
-          path: "/employee/add",
-          component: () => import("@/views/employee/addEmployee.vue"),
-          meta: {
-            title: "添加/修改员工",
-            hidden: true
-          }
-        },
+        // {
+        //   path: "/employee/add",
+        //   component: () => import("@/views/employee/addEmployee.vue"),
+        //   meta: {
+        //     title: "添加/修改员工",
+        //     hidden: true
+        //   }
+        // },
         
-        {
-          path: "/setmeal/add",
-          component: () => import("@/views/setmeal/addSetmeal.vue"),
-          meta: {
-            title: "添加套餐",
-            hidden: true
-          }
-        },
+        // {
+        //   path: "/setmeal/add",
+        //   component: () => import("@/views/setmeal/addSetmeal.vue"),
+        //   meta: {
+        //     title: "添加套餐",
+        //     hidden: true
+        //   }
+        // },
 
         {
           path: "NPS",
@@ -146,7 +146,7 @@ const router = new Router({
             },
             {
               path: "/NPS/search",
-              component: () => import("@/views/orderDetails/index.vue"),
+              component: () => import("@/views/NPS/npsSearch.vue"),
               meta: {
                 title: "NPSSearch",
                 icon: "icon-category",
@@ -186,14 +186,14 @@ const router = new Router({
 
         {
           path: "SCR",
-          component: () => import("@/views/ageReturn/index.vue"),
+          component: () => import("@/views/scr/index.vue"),
           meta: {
             title: "SCR",
           },
           children:[
             {
               path: "/import",
-              component: () => import("@/views/ageReturn/importAgeReturn.vue"),
+              component: () => import("@/views/scr/importSCR.vue"),
               meta: {
                 title: "SCR Import",
                 icon: "icon-category",
@@ -201,10 +201,28 @@ const router = new Router({
               }
             },
             {
-              path: "/search",
-              component: () => import("@/views/orderDetails/index.vue"),
+              path: "/result",
+              component: () => import("@/views/scr/scrResult.vue"),
               meta: {
                 title: "SCR Search",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+            {
+              path: "/history",
+              component: () => import("@/views/scr/scrHistory.vue"),
+              meta: {
+                title: "SCR History",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+            {
+              path: "/dod",
+              component: () => import("@/views/scr/dodResearch.vue"),
+              meta: {
+                title: "DOD Research",
                 icon: "icon-category",
                 subgroup:true
               }

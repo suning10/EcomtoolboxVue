@@ -1,6 +1,7 @@
 <template>
 
 <div class="addBrand-container">
+  <h2 style="text-align: center; margin-bottom: 10px;">Ecom Toolbox</h2>
     <div class="container">
 
         <el-form ref="form" :model="ruleform " label-width="120px" v-if="!displayResult">

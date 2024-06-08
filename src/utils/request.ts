@@ -50,7 +50,7 @@ service.interceptors.response.use(
           router.push('/login')
           break;
         case 405:
-          error.message = '请求错误'
+          error.message = 'Login Failed'
       }
     }
     //请求响应中的config的url会带上代理的api需要去掉

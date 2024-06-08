@@ -10,21 +10,17 @@
                :on-success="handleAvatarSuccess"
                :on-remove="handleRemove"
                :on-error="handleError"
-               :before-upload="beforeAvatarUpload"
                :headers="headers">
-      <img v-if="imageUrl"
-           :src="imageUrl"
-           class="avatar">
 
-      <i v-else
+      <i
          class="el-icon-plus avatar-uploader-icon" />
       <span v-if="imageUrl"
             class="el-upload-list__item-actions">
         <span class="el-upload-span"
               @click.stop="oploadImgDel">
-          删除图片
+          delete file
         </span>
-        <span class="el-upload-span"> 重新上传 </span>
+        <span class="el-upload-span"> upload Again </span>
       </span>
     </el-upload>
     <p class="upload-tips">
@@ -59,7 +55,7 @@ export default class extends Vue {
   handleError(err, file, fileList) {
     console.log(err, file, fileList, 'handleError')
     this.$message({
-      message: '图片上传失败',
+      message: 'upload failed',
       type: 'error'
     })
   }
@@ -76,16 +72,6 @@ export default class extends Vue {
   oploadImgDel() {
     this.imageUrl = ''
     this.$emit('imageChange', this.imageUrl)
-  }
-  beforeAvatarUpload(file) {
-    const isLt2M = file.size / 1024 / 1024 < this.size
-    if (!isLt2M) {
-      this.$message({
-        message: `上传文件大小不能超过${this.size}M!`,
-        type: 'error'
-      })
-      return false
-    }
   }
 }
 </script>

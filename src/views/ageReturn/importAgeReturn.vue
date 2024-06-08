@@ -1,64 +1,36 @@
-<template>
-<div>
-    <div class="addBrand-container">
-        <div class="container">
-            <div class="upload-demo">
-                <el-upload
-                    ref="upload"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    list-type="text"
-                    :on-remove="handleRemove"
-                    :auto-upload="false"
-                    >
-                <el-button size="small" type="primary">Select Files</el-button>
-                <div slot="tip" class="el-upload__tip">Only jpg/png files with a size less than 500kb are allowed.</div>
-                </el-upload>
-                <el-button size="small" type="success" @click="submitUpload">Upload Files</el-button>
-                <el-dialog :visible.sync="dialogVisible">
-                    <img width="100%" :src="dialogImageUrl" alt="" />
-                </el-dialog>
-            </div>
-            
-        </div>
-    </div>
-</div>
 
+
+
+<template>
+
+<div class="addBrand-container">
+  <h2 style="text-align: center; margin-bottom: 10px;">Ecom Toolbox</h2>
+    <div class="container">
+
+      <upload-file 
+      actionUrl="api/ageReturn/upload"
+      type="csv"
+      redirectUrl = "/AgedReturn/search"
+      :api = "upload"
+      ></upload-file>
+    </div>
+
+</div>
 
 </template>
 
 <script lang="ts">
 import { Vue,Component, Ref} from 'vue-property-decorator'
+import UploadFile from "@/components/FileUpload/index.vue"
+import { uploadFile } from '@/api/common'
 @Component({
   name: 'agereturnimport',
+  components: {
+    UploadFile
+  }
 })
 export default class extends Vue{
-
-
-    private fileList = [];
-
-    private handleChange(file, fileList) {
-        this.fileList = fileList.slice(-3);
-      }
-    
-    private submit(){
-        console.log(this.fileList)
-    } 
-
-    @Ref('upload') readonly upload!: { submit: () => void };
-  dialogImageUrl: string = '';
-  dialogVisible: boolean = false;
-
-
-  handleRemove(file: any, fileList: any[]) {
-    console.log(file, fileList);
-  }
-
-  submitUpload() {
-    console.log(this.upload)
-    if (this.upload) {
-      this.upload.submit();
-    }
-}
+   private upload = UploadFile
 }
 </script>
 

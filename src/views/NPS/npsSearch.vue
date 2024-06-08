@@ -1,40 +1,72 @@
 <template>
-
-<div>
-<el-page-header  content="Aged Return Search">
-</el-page-header>
-<el-form ref="form" :model="form" label-width="120px">
-  <el-form-item label="RDOs">
-    <el-input type="textarea" v-model="form.desc" placeholder="please enter RDO (Start with 8) here"></el-input>
-  </el-form-item>
-  <el-form-item>
-    <el-button type="primary" @click="onSubmit">Search Return Tracking</el-button>
-  </el-form-item>
-</el-form>
-<div>
-</template>
-
-<script>
-
-  export default {
-    data() {
-      return {
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+  <div class="addBrand-container">
+    <h2 style="text-align: center; margin-bottom: 10px;">Ecom Toolbox</h2>
+      <div class="container">
+          <iframe src="http://105.52.72.150:19888/NPSHelper.php" 
+          style="border:0px #ffffff none; text-align: center;" 
+          name="myiFrame" scrolling="yes" 
+          frameborder="1" marginheight="0px" 
+          marginwidth="0px" 
+          height="1000px" width="100%" 
+          allowfullscreen></iframe>
+  
+  
+      </div>
+  </div>
+  
+  
+  </template>
+  
+  <script lang="ts">
+  import { Vue,Component} from 'vue-property-decorator'
+  @Component({
+    name: 'NPSSearch',
+  })
+  export default class extends Vue{
+  
+  }
+  </script>
+  
+  <style lang="scss" scoped>
+  .addBrand {
+    &-container {
+      margin: 30px;
+      margin-top: 30px;
+      .HeadLable {
+        background-color: transparent;
+        margin-bottom: 0px;
+        padding-left: 0px;
+      }
+      .container {
+        position: relative;
+        z-index: 1;
+        background: #fff;
+        padding: 30px;
+        border-radius: 4px;
+        // min-height: 500px;
+        .subBox {
+          padding-top: 30px;
+          text-align: center;
+          border-top: solid 1px $gray-5;
         }
       }
-    },
-    methods: {
-      onSubmit() {
-        console.log('submit!');
+      .idNumber {
+        margin-bottom: 39px;
+      }
+  
+      .el-form-item {
+        margin-bottom: 29px;
+      }
+  
+      .el-textarea{
+        width: 50%;
+      }
+      .el-input {
+        width: 100%;
+      }
+      .el-button{
+          text-align: center;
       }
     }
   }
-</script>
+  </style>

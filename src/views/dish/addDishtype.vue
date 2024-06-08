@@ -27,7 +27,7 @@
             </el-select>
           </el-form-item>
         </div>
-        <div>
+        <div>iel
           <el-form-item label="菜品价格:"
                         prop="price">
             <el-input v-model="ruleForm.price"

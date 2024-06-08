@@ -1,29 +1,25 @@
 <template>
-<div class="addBrand-container">
-  <h2 style="text-align: center; margin-bottom: 10px;">Ecom Toolbox</h2>
+   <div class="addBrand-container">
+    <h2 style="text-align: center; margin-bottom: 10px;">Ecom Toolbox</h2>
     <div class="container">
-        <iframe src="http://105.52.72.150:19888/importNewData.php" 
-        style="border:0px #ffffff none; text-align: center;" 
-        name="myiFrame" scrolling="yes" 
-        frameborder="1" marginheight="0px" 
-        marginwidth="0px" 
-        height="500px" width="100%" 
-        allowfullscreen></iframe>
 
+        <router-view />
 
     </div>
 </div>
-
-
 </template>
 
 <script lang="ts">
 import { Vue,Component} from 'vue-property-decorator'
+
 @Component({
-  name: 'NPSImport',
+  name: 'ageReturn'
 })
 export default class extends Vue{
 
+    private handleTest(){
+        this.$router.push('/')
+    }
 }
 </script>
 
@@ -49,23 +45,6 @@ export default class extends Vue{
         text-align: center;
         border-top: solid 1px $gray-5;
       }
-    }
-    .idNumber {
-      margin-bottom: 39px;
-    }
-
-    .el-form-item {
-      margin-bottom: 29px;
-    }
-
-    .el-textarea{
-      width: 50%;
-    }
-    .el-input {
-      width: 100%;
-    }
-    .el-button{
-        text-align: center;
     }
   }
 }
