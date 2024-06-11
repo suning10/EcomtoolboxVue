@@ -20,7 +20,9 @@
   
   <script lang="ts">
   //import { uploadFile } from '@/api/common'
+import { uploadFileFactory } from '@/api/commonFactory'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+
   //import { getToken } from '@/utils/cookies'
   @Component({
     name: 'UploadFile'
@@ -32,7 +34,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
     @Prop() redirectUrl!: string
 
-    @Prop({type:Function}) api!: Function 
+    @Prop() api!: string
 
     // for furture use 
     // private headers = {
@@ -84,14 +86,14 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 
         this.$refs.fileToUpload.submit();
-        console.log(this.file)
         if(!this.checkExtension(this.file.name)){
           return
         }
         const formData = new FormData();
         formData.append('file',this.file);
 
-        this.api(formData).then(res =>{
+        const uploadFunction = uploadFileFactory(this.api);
+        uploadFunction(formData).then(res =>{
             if(res.data.code === 0){
               if(res.data.msg!=''){
                 this.$message.error(res.data.msg)

@@ -43,7 +43,7 @@
         </el-form>
         <div v-else>
           <el-table 
-          :data="tableData"
+          :data="currentChange"
           border
           style="width: 100%">
             <el-table-column
@@ -90,6 +90,17 @@
             </el-table-column>
           </el-table>
 
+          <el-pagination 
+            style="text-align: right;"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="page"
+            :page-sizes="[10, 50, 100, 1000]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
+
           <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
           <el-button type="primary" @click="goBack(false)">Back</el-button>
           <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
@@ -107,6 +118,7 @@
 <script lang="ts">
 
 import { searchByPO, searchByRDO } from '@/api/return';
+import { computed } from '@vue/runtime-dom';
 
 import { Vue,Component} from 'vue-property-decorator'
 @Component({
@@ -123,11 +135,35 @@ export default class extends Vue
         poId:''
     }
 
+    //pagination settings
+    private page = 1;
+    private pageSize = 25;
+    private total = 0;
+    private currentData = [];
+
+
+
+    get currentChange(){
+      const start = this.pageSize * (this.page - 1);
+      const end = start + this.pageSize;
+      return this.tableData.slice(start,end);
+    } 
+
+    private handleSizeChange(size:number){
+      this.pageSize = size;
+      this.page = 1;
+    }
+
+    private handleCurrentChange(page:number){
+      this.page = page
+    }
+
     private emptyRDO = true;
     private displayResult = false;
 
 
     private tableData = [];
+
 
 
     private rdoSearch(){
@@ -142,7 +178,7 @@ export default class extends Vue
         if(res.data.code === 1){
           console.log(res.data);
           this.tableData = res.data.data
-          console.log(this.tableData)
+          this.total = this.tableData.length;
         }
       })
         this.displayResult = !this.displayResult;
@@ -167,6 +203,9 @@ export default class extends Vue
           searchByPO(payload).then((res) =>{
           if(res.data.code === 1){
             this.tableData = res.data.data
+          }
+          else{
+            this.$message.warning("no result found")
           }
         })
           this.displayResult = !this.displayResult;

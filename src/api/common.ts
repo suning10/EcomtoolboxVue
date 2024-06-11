@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export const uploadFile = (data: any) =>
+export const uploadFileAgeReturn = (data: any) =>
     request({
       'url': 'ageReturn/upload',
       'method': 'post',

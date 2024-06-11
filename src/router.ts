@@ -204,7 +204,7 @@ const router = new Router({
               path: "/result",
               component: () => import("@/views/scr/scrResult.vue"),
               meta: {
-                title: "SCR Search",
+                title: "SCR Summary",
                 icon: "icon-category",
                 subgroup:true
               }

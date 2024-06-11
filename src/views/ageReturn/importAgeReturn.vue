@@ -11,7 +11,7 @@
       actionUrl="api/ageReturn/upload"
       type="csv"
       redirectUrl = "/AgedReturn/search"
-      :api = "upload"
+      api = "uploadFileAgeReturn"
       ></upload-file>
     </div>
 
@@ -22,7 +22,7 @@
 <script lang="ts">
 import { Vue,Component, Ref} from 'vue-property-decorator'
 import UploadFile from "@/components/FileUpload/index.vue"
-import { uploadFile } from '@/api/common'
+//import { uploadFile } from '@/api/common'
 @Component({
   name: 'agereturnimport',
   components: {
@@ -30,7 +30,7 @@ import { uploadFile } from '@/api/common'
   }
 })
 export default class extends Vue{
-   private upload = UploadFile
+
 }
 </script>
 
