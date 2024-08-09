@@ -6,4 +6,8 @@ export const uploadFileFactory = (name:string) => {
         return flist.uploadFileAgeReturn
     }
 
+    if(name == "uploadFileAgeReturnSimple"){
+        return flist.uploadFileAgeReturnSimple
+    }
+
 }

@@ -164,6 +164,24 @@ const router = new Router({
           },
           children:[
             {
+              path: "/AgedReturn/importSimple",
+              component: () => import("@/views/ageReturn/importAgeReturnSimple.vue"),
+              meta: {
+                title: "New Return Import",
+                icon: "icon-category",
+                subgroup: true
+              }
+            },
+            {
+              path: "/AgedReturn/SimpleRDOSearch",
+              component: () => import("@/views/ageReturn/ageReturnSearchSimple.vue"),
+              meta: {
+                title: "New RDO Search",
+                icon: "icon-category",
+                subgroup: true
+              }
+            },
+            {
               path: "/AgedReturn/import",
               component: () => import("@/views/ageReturn/importAgeReturn.vue"),
               meta: {
@@ -228,6 +246,66 @@ const router = new Router({
               }
             }
           ]
+        },
+
+        {
+          path: "Vertica",
+          component: () => import("@/views/vertica/index.vue"),
+          meta: {
+            title: "Vertica",
+          },
+          children:[
+            {
+              path: "/ups",
+              component: () => import("@/views/vertica/upsTracking.vue"),
+              meta: {
+                title: "UPSTracking",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+
+            {
+              path: "/fedex",
+              component: () => import("@/views/vertica/fedExTracking.vue"),
+              meta: {
+                title: "FedExTracking",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+
+            {
+              path: "/pb",
+              component: () => import("@/views/vertica/pbTracking.vue"),
+              meta: {
+                title: "pbTracking",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+
+            {
+              path: "/edd",
+              component: () => import("@/views/vertica/EDD.vue"),
+              meta: {
+                title: "EDD",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+
+            {
+              path: "/edd",
+              component: () => import("@/views/vertica/EDD.vue"),
+              meta: {
+                title: "EDD",
+                icon: "icon-category",
+                subgroup:true
+              }
+            }
+          ]
+
         }
 
       ]

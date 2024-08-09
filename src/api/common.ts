@@ -9,3 +9,13 @@ export const uploadFileAgeReturn = (data: any) =>
       },
       data: data
     })
+
+export const uploadFileAgeReturnSimple = (data: any) =>
+      request({
+        'url': 'ageReturn/uploadSimple',
+        'method': 'post',
+        'headers': {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: data
+      })

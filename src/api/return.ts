@@ -13,3 +13,11 @@ export const searchByPO = (data: any) =>
     'method': 'post',
     data: data
   })
+
+export const searchByRDOSimple = (data: any) =>
+    request({
+      'url': 'ageReturn/byRDOSimple',
+      'method': 'post',
+      data: data
+    })
+  

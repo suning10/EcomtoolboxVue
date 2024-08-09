@@ -13,7 +13,7 @@
           v-if="theOnlyOneChild.meta"
           :to="resolvePath(theOnlyOneChild.path)"
         >
-          <el-menu-item
+          <el-menu-item style="margin: 5px;"
             :index="resolvePath(theOnlyOneChild.path)"
             :class="{ 'submenu-title-noDropdown': isFirstLevel }"
           >
@@ -121,3 +121,5 @@ export default class extends Vue {
   }
 }
 </script>
+
+

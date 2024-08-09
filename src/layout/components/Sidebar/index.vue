@@ -159,4 +159,6 @@ export default class extends Vue {
   width: 100% !important;
   padding: 47px 15px 0;
 }
+
+
 </style>

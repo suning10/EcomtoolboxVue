@@ -62,7 +62,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
       if(fileName && fileName !=''){
         const ext_name = fileName.split('.').pop();
         if(!this.type.includes(ext_name)){
-          this.$message.error("please upload the file with correct extension")
+          this.$message.error('please upload the file with correct extension')
           return false;
         }
 
@@ -75,7 +75,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     private beforeUpload(file){
       const filesize = file.size /1024/1024 < 30
       if(!filesize){
-        this.$message.warning("file is too big")
+        this.$message.warning('file is too big')
         return false
       }
       const ext:string = file.name;
@@ -85,7 +85,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     private submitUpload() {
 
 
-        this.$refs.fileToUpload.submit();
+        (this.$refs.fileToUpload as any).submit()
         if(!this.checkExtension(this.file.name)){
           return
         }
@@ -99,19 +99,20 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
                 this.$message.error(res.data.msg)
               }
               else{
-                this.$message.error("error when uploading the file")
+                this.$message.error('error when uploading the file')
               }
                 
             }
             if(res.data.code ===1){
-              this.$message.success("import successfully")
-              this.$router.push(this.redirectUrl)   
+              this.$message.success('import successfully')
+              this.$router.push(this.redirectUrl)
             }
         });
       }
   
   }
   </script>
+
   <style lang='scss'>
   .borderNone {
     .el-upload {
@@ -119,6 +120,3 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     }
   }
   </style>
-
-  </style>
-  
