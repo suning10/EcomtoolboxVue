@@ -1,12 +1,12 @@
 <template>
 
     <div class="addBrand-container">
-      <h2 style="text-align: center; margin-bottom: 10px;">Pitney Bows Summary</h2>
+      <h2 style="text-align: center; margin-bottom: 10px;">Quick Order Search</h2>
         <div class="container">
             <el-form ref="form" :model="ruleform " label-width="240px" v-if="!displayResult">
     
               <el-form-item label = "Search By">
-                <el-select v-model=byDelivery placeholder="Select" >
+                <el-select v-model=critiria placeholder="Select" >
                   <el-option
                     label="PO"
                     :value=true>
@@ -17,7 +17,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label = "Summary or Details">
+              <el-form-item label = "With Details?">
                 <el-select v-model=summaryFlag placeholder="Select" >
                   <el-option
                     label="Only EDD"
@@ -29,11 +29,21 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item label="UPS Tracking Numbers" >
+              <el-input type="textarea" v-model="ids" 
+              placeholder="Please Enter PO or Tracking Numbers, One at a line" 
+              rows="30"
+              >
+              </el-input>
+            </el-form-item>
               <el-form-item>
-                  <el-button type="primary" @click="pbSearch">Search</el-button>
+                  <el-button type="primary" @click="search" :loading = loader >Search</el-button>
+                  <el-button type="primary" @click="clear">Clear</el-button>
               </el-form-item>
+
+
   
-              <div class="loader" v-if="loader"></div>
+              <!-- <div class="loader" v-if="loader"></div> -->
     
             </el-form>
             <div v-else>
@@ -42,19 +52,137 @@
               border
               style="width: 100%">
                 <el-table-column
-                  prop="trackingId"
-                  label="trackingId"
+                  prop="poId"
+                  label="poId"
                   width="180">
                 </el-table-column>
                 <el-table-column
-                  prop="productId"
-                  label="productId"
+                  prop="doId"
+                  label="DO"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="orderTsEst"
+                  label="Order Date"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="shippedSku"
+                  label="SKU"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="salesPrice"
+                  label="Sales Price"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="listPrice"
+                  label="List Price"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="shippingAmt"
+                  label="Shipping Cost"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="shippedQty"
+                  label="qty"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="physicalFulfillerId"
+                  label="Fulfiller"
+                  width="180">
+                </el-table-column>
+                <!-- <el-table-column
+                  prop="tracking"
+                  label="tracking"
+                  width="180">
+                </el-table-column> -->
+                <el-table-column label="tracking" width="180">
+                  <template slot-scope="scope">
+                    <a v-if="scope.row.fulfillmentCarrierId == 'ups'" :href = "'https://www.ups.com/track?loc=en_US&tracknum=' + scope.row.tracking + '&requester=ST/trackdetails'" target="_blank" style="color: blue; text-decoration: underline;">
+                      {{ scope.row.tracking }}
+                    </a>
+                    <a v-else-if="scope.row.fulfillmentCarrierId == 'fedex'" :href = "'https://www.fedex.com/fedextrack/?trknbr=' + scope.row.tracking" target="_blank" style="color: blue; text-decoration: underline;">
+                      {{ scope.row.tracking }}
+                    </a>
+                    <a v-else>{{ scope.row.tracking }}</a>
+                  </template>
+
+                </el-table-column>
+                <el-table-column
+                  prop="edd"
+                  label="EDD"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="orderEntryDate"
+                  label="Entry Date"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="shipScanDate"
+                  label="Ship Date"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="deliveredTs"
+                  label="Delivered Date"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="cancellationStatus"
+                  label="Cancelled Status"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="cancellationReason"
+                  label="Cancelled Reason"
+                  width="180">
+                </el-table-column> 
+                <el-table-column
+                  prop="lineItemStatus"
+                  label="Line Item Status"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="orderStatus"
+                  label="Order Status"
+                  width="180">
+                </el-table-column>           
+              </el-table>
+
+              <el-table v-else 
+              :data="currentChange"
+              border
+              style="width: 100%">
+              <el-table-column
+                  prop="poId"
+                  label="poId"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="doId"
+                  label="doId"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="tracking"
+                  label="tracking"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="edd"
+                  label="EDD"
                   width="180">
                 </el-table-column>
                 
               </el-table>
     
-              <el-pagination v-if = "!summaryFlag"
+              <el-pagination 
                 style="text-align: right;"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
@@ -80,7 +208,7 @@
     </template>
   <script lang="ts">
   
-  import { verticaApiFactory } from '@/api/verticaFactory';
+  import { eddSearch } from '@/api/vertica';
   import { Vue,Component} from 'vue-property-decorator'
   @Component({
     name: 'EDD',
@@ -96,7 +224,7 @@
   private total = 0;
   private currentData = [];
   private selectedDate = '';
-  
+  private ids = ''
   private summaryFlag = true;
   
   //control the spin 
@@ -121,7 +249,7 @@
   }
   
   private emptyRDO = true;
-  private byDelivery = true;
+  private critiria = true;
   private displayResult = false;
   
   
@@ -179,58 +307,48 @@
   // }
   
   // }
+
+  private clear(){
+    this.ids = '';
+    this.loader = false
+  }
   
-  private pbSearch(){
-    const start = new Date(this.selectedDate[0]).toISOString().slice(0,10);
-    const end = new Date(this.selectedDate[1]).toISOString().slice(0,10);
-    const diff = new Date(this.selectedDate[1]).getDate() - new Date(this.selectedDate[0]).getDate();
+  private search(){
+
     this.loader = true;
-  
-    if(diff > 15){
-      this.$message.error("for better performance, please choose date range less than 15 days");
-    }
-    else{
-        //todo: add summary flag and ship or delievery
-        let verticaMethod;
-        if(this.summaryFlag){
-          if(this.byDelivery){
-            verticaMethod = verticaApiFactory("pbDelSummary")
-          }
-          else{
-            verticaMethod = verticaApiFactory("pbShipSummary")
-          }
-        }
-        else{
-          if(this.byDelivery){
-            verticaMethod = verticaApiFactory("pbDel")
-          }
-          else{
-            verticaMethod = verticaApiFactory("pbShip")
-          }
+    const data = this.ids.split('\n').filter(
+      item => item.trim().length > 0
+    ).map(element => element.toLowerCase());
+
+    const d = Array.from(new Set(data))
+
+        //summary - EDD only
+        //critiria - PO or Tracking
+        var payload = {"idList":d,"searchFlag":"PO"}
+
+        if(!this.critiria){
+          payload.searchFlag = "TRACKING"
         }
         
-        verticaMethod(start,end).then((res) => {
+        try{
+        eddSearch(payload).then((res) => {
           if(res.data.code === 1){
         this.tableData = res.data.data;
-        if(this.summaryFlag){
-          this.total = res.data.data;
-        }
-        else{
-          this.total = this.tableData.length;
-        }
+        this.total = this.tableData.length;
         this.loader = false;
         this.displayResult = !this.displayResult;
   
           }
         else{
+        this.loader = false;
         this.$message.warning("no result found")
           }
-        }) ;
-      }
+        }) ;}catch(error){this.$message.error(error);}
+      
   
   
-  
-  
+
+        
       
     }
   
@@ -260,11 +378,7 @@
   
   private goBack(clean:boolean){
   if(clean){
-  this.ruleform = {
-  
-  id: '',
-  poId:''
-  }
+    this.ids = ''
   }
   this.displayResult = !this.displayResult;
   }

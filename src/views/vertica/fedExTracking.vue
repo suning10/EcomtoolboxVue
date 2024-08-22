@@ -29,61 +29,64 @@
               <el-table 
               :data="currentChange"
               border
-              style="width: 100%">
+              
+              >
                 <el-table-column
                   prop="trackingId"
                   label="trackingId"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="statusdetailTs"
                   label="statusdetailTs"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="statusdetailDescription"
                   label="status"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="serviceType"
                   label="serviceType"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="eventTs"
                   label="eventTs"
-                  width="150">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="eventsDescription"
                   label="Description"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
 
                 <el-table-column
                   prop="statusCity"
-                  label="statusCity">
+                  label="statusCity"
+                  :min-width="80">
+
                 </el-table-column>
                 <el-table-column
                   prop="shipmentDelayCity"
                   label="shipmentDelayCity"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="shipmentException"
                   label="shipmentException"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="exceptionDescription"
                   label="exceptionDescription"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="returnTrackingNumberNew"
                   label="returnTrackingNumberNew"
-                  width="100">
+                  min-width="150px">
                 </el-table-column>
                 <el-table-column
                   prop="isActive"
@@ -173,26 +176,27 @@
     const data = this.trackingIds.split('\n').filter(
         item => item.trim().length > 0
       );
-  
-  
-    try{  
-    const d = Array.from(new Set(data))
-    const payload = {'trackingId':d,'isActive':this.radio};
-    fedexTracking(payload).then((res) =>{
-    if(res.data.code === 1){
-      console.log(res.data);
-      this.tableData = res.data.data
-      this.total = this.tableData.length;
-      this.loader = false;
-      this.displayResult = !this.displayResult;
-    }
-    else{
-      this.$message.error("No Records Can Be Found")
-      this.loader = false
-    }
-    })}catch(error){this.$message.error(error);console.log(error)}
-  
+    
+      if(data.length > 1000){this.$message.error("For Better Performance, please have number of trackings less than 1000");return}
+        try{  
+        const d = Array.from(new Set(data))
+        const payload = {'trackingId':d,'isActive':this.radio};
+        fedexTracking(payload).then((res) =>{
+        if(res.data.code === 1){
+          console.log(res.data);
+          this.tableData = res.data.data
+          this.total = this.tableData.length;
+          this.loader = false;
+          this.displayResult = !this.displayResult;
+        }
+        else{
+          this.$message.error("No Records Can Be Found")
+          this.loader = false
+        }
+        })}catch(error){this.$message.error(error);console.log(error)}
+      
     } 
+      
   
     else{
       this.loader = false
@@ -231,7 +235,10 @@
   }
   this.displayResult = !this.displayResult;
   }
+
   }
+
+
   </script>
   
   <style lang="scss" scoped>
@@ -274,6 +281,10 @@
       .el-button{
           text-align: center;
       }
+      .el-table .cell {
+      white-space: nowrap;
+      width: fit-content;
+      }
       .loader {
       transform: translate(-50%, -50%);
         border: 10px solid #f3f3f3; /* Light grey */
@@ -283,6 +294,7 @@
         height: 100px;
         animation: spin 2s linear infinite;
     }
+
   
       @keyframes spin {
         0% { transform: rotate(0deg); }

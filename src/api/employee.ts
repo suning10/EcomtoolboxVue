@@ -7,7 +7,7 @@ import request from '@/utils/request'
 // 登录
 export const login = (data: any) =>
   request({
-    'url': '/employee/login',
+    'url': '/user/login',
     'method': 'post',
     data: data
   })
@@ -15,41 +15,41 @@ export const login = (data: any) =>
   // 退出
  export const userLogout = (params: any) =>
  request({
-   'url': `/employee/logout`,
+   'url': `/user/logout`,
    'method': 'post',
    params
  })
 
  export const getEmployeeList = (params: any) =>
   request({
-    'url': `/employee/page`,
+    'url': `/user/page`,
     'method': 'get',
     'params':params
   })
 
   export const updateEmployeeStatus = (params: any) =>
     request({
-      'url': `/employee/status/${params.status}`,
+      'url': `/user/status/${params.status}`,
       'method': 'post',
       'params':{'id': params.id}
     })
 
   export const addEmployee= (params: any) =>
       request({
-        'url': `/employee/`,
+        'url': `/user/`,
         'method': 'post',
         'data': params
       })
 
   export const getEmployeebyId = (id: any) =>
     request({
-      'url': `/employee/${id}`,
+      'url': `/user/${id}`,
       'method': 'get'
     })
 
   export const updateEmployee = (params: any) =>
     request({
-      'url': `/employee/`,
+      'url': `/user/`,
       'method': 'put',
       'data':params
     })

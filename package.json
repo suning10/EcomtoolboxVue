@@ -1,8 +1,8 @@
 {
-  "name": "project-sky-admin-vue-ts",
+  "name": "ecomToolBox",
   "version": "0.1.0",
   "private": true,
-  "author": "Chong Guo <armourcy@gmail.com>",
+  "author": "Lang Qin <qinlang718@gmail.com>",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --skip-plugins @vue/cli-plugin-eslint",

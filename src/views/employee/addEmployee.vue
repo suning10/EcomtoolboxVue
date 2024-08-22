@@ -8,24 +8,27 @@
         <el-form-item label="Name" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
+        <el-form-item label="Password" prop="password">
+          <el-input v-model="ruleForm.password"></el-input>
+        </el-form-item>
         <el-form-item label="Phone" prop="phone">
           <el-input v-model="ruleForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="Sex" prop="sex">
-            <el-radio v-model="ruleForm.sex" label="1">男</el-radio>
-            <el-radio v-model="ruleForm.sex" label="2">女</el-radio>
+            <el-radio v-model="ruleForm.sex" label="1">Male</el-radio>
+            <el-radio v-model="ruleForm.sex" label="2">Female</el-radio>
         </el-form-item>
         <el-form-item label="ID" prop="idNumber">
           <el-input v-model="ruleForm.idNumber"></el-input>
         </el-form-item>
         <div class="subBox">
-          <el-button type="primary" @click="submitForm('ruleForm',false)">保存</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm',false)">Save</el-button>
           <el-button 
             v-if="this.optType === 'add'" 
             type="primary" 
-            @click="submitForm('ruleForm',true)">保存并继续添加员工
+            @click="submitForm('ruleForm',true)">Save and Add Another User
           </el-button>
-          <el-button @click="() => this.$router.push('/employee')">返回</el-button>
+          <el-button @click="() => this.$router.push('/user')">Go Back</el-button>
         </div>
       </el-form>
     </div>
@@ -65,7 +68,10 @@ export default {
       username: [
         {required:true, message:'please enter a correct username', trigger:'blur'}
       ],
-      phone:[{required:true, trigger:'blur',validator:(rule,value,callback) =>{
+      password: [
+        {required:true, message:'please enter a password', trigger:'blur'}
+      ],
+      phone:[{required:false, trigger:'blur',validator:(rule,value,callback) =>{
         if(value === '' || (!/^\d{10}$/.test(value))){
           callback( new Error("please enter correct phone number"))
          }else{
@@ -96,12 +102,13 @@ export default {
                 this.ruleForm = {
                   username:'',
                   name : '',
+                  password:'',
                   phone:'',
                   sex:'1',
                   id:''
                 }
               }else{
-                this.$router.push('/employee')
+                this.$router.push('/user')
               }
             }else{
               this.$message.error("fail to save, please correct highlighted lines")
@@ -112,7 +119,7 @@ export default {
             updateEmployee(this.ruleForm).then(res =>{
               if(res.data.code === 1){
                 this.$message.success("save successfully")
-                this.$router.push('/employee')
+                this.$router.push('/user')
               }else{
                 this.$message.error(res.data.msg);
                 

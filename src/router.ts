@@ -100,24 +100,24 @@ const router = new Router({
         //     icon: "icon-category"
         //   }
         // },
-        // {
-        //   path: "employee",
-        //   component: () => import("@/views/employee/index.vue"),
-        //   meta: {
-        //     title: "员工管理",
-        //     icon: "icon-employee"
-        //   }
+        {
+          path: "user",
+          component: () => import("@/views/employee/index.vue"),
+          meta: {
+            title: "Manage user",
+            hidden: true
+          }
 
-        // },
+        },
         
-        // {
-        //   path: "/employee/add",
-        //   component: () => import("@/views/employee/addEmployee.vue"),
-        //   meta: {
-        //     title: "添加/修改员工",
-        //     hidden: true
-        //   }
-        // },
+        {
+          path: "/user/add",
+          component: () => import("@/views/employee/addEmployee.vue"),
+          meta: {
+            title: "Edit User",
+            hidden: true
+          }
+        },
         
         // {
         //   path: "/setmeal/add",
@@ -296,7 +296,7 @@ const router = new Router({
             },
 
             {
-              path: "/edd",
+              path: "/empty",
               component: () => import("@/views/vertica/EDD.vue"),
               meta: {
                 title: "EDD",

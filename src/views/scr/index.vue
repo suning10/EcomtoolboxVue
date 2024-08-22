@@ -1,6 +1,6 @@
 <template>
    <div class="addBrand-container">
-    <h2 style="text-align: center; margin-bottom: 10px;">Ecom Toolbox</h2>
+    <h2 style="text-align: center; margin-bottom: 10px;">SCR</h2>
     <div class="container">
 
         <router-view />

@@ -12,21 +12,25 @@
           </el-button>
           <div
                class="userList">
-            <p class="amendPwdIcon"
+            <!-- <p class="amendPwdIcon"
                @click="handlePwd">
               Change Password<i />
-            </p>
+            </p> -->
             <p class="outLogin"
-               @click="logout">
+               @click="logout" v-if="shopShow">
               Log Out<i />
+            </p>
+            <p class="amendPwdIcon"
+               @click="addNewUser" v-if="shopShow">
+              Manage User<i />
             </p>
           </div>
         </div>
       </div>
     </div>
     <!-- 修改密码 -->
-    <Password :dialog-form-visible="dialogFormVisible"
-              @handleclose="handlePwdClose" />
+    <!-- <Password :dialog-form-visible="dialogFormVisible"
+              @handleclose="handlePwdClose" /> -->
     <!-- end -->
   </div>
 </template>
@@ -56,7 +60,6 @@ import Password from '../components/password.vue'
   },
 })
 export default class extends Vue {
-  private storeId = this.getStoreId
   private restKey: number = 0
   private newOrder = ''
   private message = ''
@@ -88,15 +91,15 @@ export default class extends Vue {
       : JSON.parse(Cookies.get('user_info') as any).name
   }
 
-  get getStoreId() {
-    let storeId = ''
-    if (UserModule.storeId) {
-      storeId = UserModule.storeId
-    } else if ((UserModule.userInfo as any).stores != null) {
-      storeId = (UserModule.userInfo as any).stores[0].storeId
-    }
-    return storeId
-  }
+  // get getStoreId() {
+  //   let storeId = ''
+  //   if (UserModule.storeId) {
+  //     storeId = UserModule.storeId
+  //   } else if ((UserModule.userInfo as any).stores != null) {
+  //     storeId = (UserModule.userInfo as any).stores[0].storeId
+  //   }
+  //   return storeId
+  // }
 
 
 
@@ -111,18 +114,18 @@ export default class extends Vue {
     })
     // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
   }
-  // 获取未读消息
-  async getCountUnread() {
-    const { data } = await getCountUnread()
-    if (data.code === 1) {
-      // this.ountUnread = data.data
-      AppModule.StatusNumber(data.data)
-      // setNewData(data.data)
-      // this.$message.success('操作成功！')
-    } else {
-      this.$message.error(data.msg)
-    }
-  }
+  // // 获取未读消息
+  // async getCountUnread() {
+  //   const { data } = await getCountUnread()
+  //   if (data.code === 1) {
+  //     // this.ountUnread = data.data
+  //     AppModule.StatusNumber(data.data)
+  //     // setNewData(data.data)
+  //     // this.$message.success('操作成功！')
+  //   } else {
+  //     this.$message.error(data.msg)
+  //   }
+  // }
 
   // 下拉菜单显示
   toggleShow() {
@@ -149,6 +152,10 @@ export default class extends Vue {
   // 关闭密码编辑弹层
   handlePwdClose() {
     this.dialogFormVisible = false
+  }
+
+  addNewUser(){
+    this.$router.push('/user')
   }
 }
 </script>

@@ -61,7 +61,8 @@
               </el-table-column>
               <el-table-column
                 prop="shippedTs"
-                label="shippedTs">
+                label="shippedTs"
+                width="180">
               </el-table-column>
               <el-table-column
                 prop="actualDeliveredTs"
@@ -70,11 +71,13 @@
               </el-table-column>
               <el-table-column
                 prop="originalScanTs"
-                label="originalScanTs">
+                label="originalScanTs"
+                width="180">
               </el-table-column>
               <el-table-column
                 prop="outForDeliveryTs"
-                label="outForDeliveryTs">
+                label="outForDeliveryTs"
+                width="180">
               </el-table-column>
               <el-table-column
                 prop="isActive"
@@ -172,7 +175,6 @@ private upsTrackingSearch(){
   const payload = {'trackingId':d,'isActive':this.radio};
   upsTracking(payload).then((res) =>{
   if(res.data.code === 1){
-    console.log(res.data);
     this.tableData = res.data.data
     this.total = this.tableData.length;
     this.loader = false;

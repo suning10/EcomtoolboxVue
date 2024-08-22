@@ -311,11 +311,7 @@ return header + '\n' + rows.join('\n');
 
 private goBack(clean:boolean){
 if(clean){
-this.ruleform = {
-
-id: '',
-poId:''
-}
+this.selectedDate = ''
 }
 this.displayResult = !this.displayResult;
 }

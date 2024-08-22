@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.7f1d45b65fbffe218d50a887cee4c111.js"
+  "precache-manifest.36e33238cd57674894c54cdf880e7da3.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "project-sky-admin-vue-ts"});
+workbox.core.setCacheNameDetails({prefix: "ecomToolBox"});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to

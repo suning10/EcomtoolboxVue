@@ -6,9 +6,9 @@
         <label style="margin-right: 5px;">
           name
         </label>
-        <el-input class = "tableBar" placeholder="please enter name" style="width: 15%;"/>
+        <el-input class = "tableBar" placeholder="please enter name" v-model="name" style="width: 15%;"/>
         <el-button type="primary" style="margin-left: 25px;" @click="pageQuery">search</el-button>
-        <el-button type="primary" style="float:right" @click = "addNewEmployee">Add new Employee</el-button>
+        <el-button type="primary" style="float:right" @click = "addNewEmployee">Add new User</el-button>
       </div>
       <el-table
       :data="records"
@@ -125,13 +125,13 @@ export default  {
         })
       },
       addNewEmployee(){
-        this.$router.push('/employee/add')
+        this.$router.push('/user/add')
       },
 
       handleEditEmployee(rid){
         this.$router.push(
           {
-            path:'/employee/add' ,
+            path:'/user/add' ,
             query:{'id':rid}
           }
         )

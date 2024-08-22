@@ -128,7 +128,7 @@ class User extends VuexModule implements IUserState {
 
   @Action
   public async LogOut () {
-    const { data } = await userLogout({})
+    //const { data } = await userLogout({})
     removeToken()
     this.SET_TOKEN('')
     this.SET_ROLES([])

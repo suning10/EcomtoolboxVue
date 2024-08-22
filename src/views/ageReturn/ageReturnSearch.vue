@@ -1,7 +1,7 @@
 <template>
 
 <div class="addBrand-container">
-  <h2 style="text-align: center; margin-bottom: 10px;">Ecom Toolbox</h2>
+  <h2 style="text-align: center; margin-bottom: 10px;">Age Return Search</h2>
     <div class="container">
 
         <el-form ref="form" :model="ruleform " label-width="120px" v-if="!displayResult">
@@ -106,7 +106,12 @@
           <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
 
         </div>
-
+        <br>
+        <h3>Check Refund Status
+          <br>
+          <a href="http://stacs/sites/Logistics/_layouts/15/DocIdRedir.aspx?ID=W52DUE32R37W-21-2126" style="color: blue; text-decoration: underline;">Link to Template</a>
+        </h3>
+        <img src ="../../assets/AgingReturn.png">
 
 
     </div>
@@ -203,6 +208,7 @@ export default class extends Vue
           searchByPO(payload).then((res) =>{
           if(res.data.code === 1){
             this.tableData = res.data.data
+            this.total = this.tableData.length;
           }
           else{
             this.$message.warning("no result found")

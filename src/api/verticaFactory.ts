@@ -18,5 +18,9 @@ export const verticaApiFactory = (name:string) => {
         return flist.pkgCountshippedSummary
     }
 
+    if(name == "edd"){
+        return flist.eddSearch
+    }
+
 
 }
