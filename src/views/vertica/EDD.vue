@@ -29,9 +29,16 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="UPS Tracking Numbers" >
+              <el-form-item label="PO" v-if="critiria">
               <el-input type="textarea" v-model="ids" 
-              placeholder="Please Enter PO or Tracking Numbers, One at a line" 
+              placeholder="Please Enter PO, One at a line" 
+              rows="30"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="Tracking Numbers" v-else>
+              <el-input type="textarea" v-model="ids" 
+              placeholder="Please Enter Tracking Numbers, it works for all carriers. One at a line" 
               rows="30"
               >
               </el-input>
