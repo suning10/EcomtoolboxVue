@@ -9,11 +9,15 @@
                 <el-select v-model=critiria placeholder="Select" >
                   <el-option
                     label="PO"
-                    :value=true>
+                    :value=0>
+                  </el-option>
+                  <el-option
+                    label="Delivery Order"
+                    :value=1>
                   </el-option>
                   <el-option
                     label="Tracking Number"
-                    :value=false>
+                    :value=2>
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -29,9 +33,16 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="PO" v-if="critiria">
+              <el-form-item label="PO" v-if="critiria == 0">
               <el-input type="textarea" v-model="ids" 
               placeholder="Please Enter PO, One at a line" 
+              rows="30"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="Delivery Order" v-else-if="critiria == 1">
+              <el-input type="textarea" v-model="ids" 
+              placeholder="Please Enter Delivery Order Number, One at a line" 
               rows="30"
               >
               </el-input>
@@ -227,7 +238,7 @@
   
   //pagination settings
   private page = 1;
-  private pageSize = 50;
+  private pageSize = 20;
   private total = 0;
   private currentData = [];
   private selectedDate = '';
@@ -236,10 +247,7 @@
   
   //control the spin 
   private loader = false;
-  
-  
-  
-  
+
   get currentChange(){
   const start = this.pageSize * (this.page - 1);
   const end = start + this.pageSize;
@@ -256,10 +264,8 @@
   }
   
   private emptyRDO = true;
-  private critiria = true;
+  private critiria = 0;
   private displayResult = false;
-  
-  
   private tableData = [];
   
   
@@ -333,8 +339,11 @@
         //critiria - PO or Tracking
         var payload = {"idList":d,"searchFlag":"PO"}
 
-        if(!this.critiria){
-          payload.searchFlag = "TRACKING"
+        if(this.critiria == 1){
+          payload.searchFlag = "DO"
+        }
+        if(this.critiria == 2){
+          payload.searchFlag = "Tracking"
         }
         
         try{

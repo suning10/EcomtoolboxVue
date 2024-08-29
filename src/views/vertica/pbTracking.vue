@@ -143,7 +143,7 @@ export default class extends Vue{
 
 //pagination settings
 private page = 1;
-private pageSize = 50;
+private pageSize = 20;
 private total = 0;
 private currentData = [];
 private selectedDate = '';
@@ -178,58 +178,6 @@ private displayResult = false;
 
 private tableData = [];
 
-
-
-// private rdoSearch(){
-
-// if(this.ruleform.id.length > 1){
-// const data = this.ruleform.id.split('\n').filter(
-//     item => item.trim().length > 0
-//   )
-//   const d = Array.from(new Set(data))
-// const payload = {'rdo':d};
-// searchByRDO(payload).then((res) =>{
-// if(res.data.code === 1){
-//   console.log(res.data);
-//   this.tableData = res.data.data
-//   this.total = this.tableData.length;
-// }
-// })
-// this.displayResult = !this.displayResult;
-// } 
-
-// else{
-// this.$message.error('Please enter RDO or PO&SKU ')
-// }
-
-// }
-
-// private poSearch(){
-
-// if(this.ruleform.poId.length > 1){
-//   // split by \n and remove blank
-//   const data = this.ruleform.poId.split('\n').filter(
-//     item => item.trim().length > 0
-//   )
-//   const d = Array.from(new Set(data))
-
-//   const payload = {'rdo':d};
-//   searchByPO(payload).then((res) =>{
-//   if(res.data.code === 1){
-//     this.tableData = res.data.data
-//   }
-//   else{
-//     this.$message.warning("no result found")
-//   }
-// })
-//   this.displayResult = !this.displayResult;
-// } 
-
-// else{
-//   this.$message.error('Please enter RDO or PO&SKU ')
-// }
-
-// }
 
 private pbSearch(){
   const start = new Date(this.selectedDate[0]).toISOString().slice(0,10);

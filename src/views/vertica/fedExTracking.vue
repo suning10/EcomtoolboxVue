@@ -132,7 +132,7 @@
   
   //pagination settings
   private page = 1;
-  private pageSize = 50;
+  private pageSize = 20;
   private total = 0;
   private currentData = [];
   private selectedDate = '';
