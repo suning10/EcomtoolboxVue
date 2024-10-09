@@ -21,6 +21,9 @@ export const verticaApiFactory = (name:string) => {
     if(name == "edd"){
         return flist.eddSearch
     }
+    if(name == "originScanUPS"){
+        return flist.OriginScanUPSSearch
+    }
 
 
 }

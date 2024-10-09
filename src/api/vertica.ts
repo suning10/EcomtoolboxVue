@@ -52,4 +52,12 @@ export const pkgCountDelivered = (startDate, endDate) =>
   });
 
 
+    export const OriginScanUPSSearch = (start,end) =>  
+      request({
+      'url': `/vertica/originScanUPS`,
+      'method': 'get',
+      params: { start: start,end:end }
+    });
+
+
   

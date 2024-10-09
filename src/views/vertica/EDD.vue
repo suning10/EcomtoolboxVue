@@ -343,7 +343,7 @@
           payload.searchFlag = "DO"
         }
         if(this.critiria == 2){
-          payload.searchFlag = "Tracking"
+          payload.searchFlag = "TRACKING"
         }
         
         try{

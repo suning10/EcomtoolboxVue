@@ -294,6 +294,16 @@ const router = new Router({
                 subgroup:true
               }
             },
+            
+            {
+              path: "/upsOrigin",
+              component: () => import("@/views/vertica/originScanUPS.vue"),
+              meta: {
+                title: "UPS Origin",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
 
             {
               path: "/empty",
