@@ -13,7 +13,7 @@
 import { Vue,Component} from 'vue-property-decorator'
 
 @Component({
-  name: 'ageReturn'
+  name: 'scr'
 })
 export default class extends Vue{
 

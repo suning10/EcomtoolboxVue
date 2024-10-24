@@ -105,7 +105,10 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
             }
             if(res.data.code ===1){
               this.$message.success('import successfully')
-              this.$router.push(this.redirectUrl)
+              if(this.redirectUrl != ''){
+                this.$router.push(this.redirectUrl)
+              }
+              
             }
         });
       }

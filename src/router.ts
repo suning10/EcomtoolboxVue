@@ -244,6 +244,25 @@ const router = new Router({
                 icon: "icon-category",
                 subgroup:true
               }
+            },
+            {
+              path: "/scr/scrReasearch",
+              component: () => import("@/views/scr/sCRResearch.vue"),
+              name:'sCRResearch',
+              meta: {
+                title: "SCR Research",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+            {
+              path: "/scr/skuReasearch",
+              component: () => import("@/views/scr/scrResearchComponent/skuResearch.vue"),
+              name:'skuResearch',
+              meta: {
+                title: "SCR Research",
+                hidden: true
+              }
             }
           ]
         },
