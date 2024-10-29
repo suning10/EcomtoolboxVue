@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.0ef7790a2333d43db976a483dd4497b2.js"
+  "precache-manifest.23937f642c4d1c7cfabb2ce38579c00c.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "ecomToolBox"});

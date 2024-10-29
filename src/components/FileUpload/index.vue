@@ -12,7 +12,7 @@
 
 >
             <el-button slot="trigger" size="small" type="primary">select file</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :loading = loading>upload to server</el-button>
         </el-upload>
 
     </div>
@@ -50,6 +50,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     }
 
     private file;
+    loading = false
 
 
     private httpRequest(data){
@@ -84,11 +85,11 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
     private submitUpload() {
 
-
         (this.$refs.fileToUpload as any).submit()
         if(!this.checkExtension(this.file.name)){
           return
         }
+        this.loading = true
         const formData = new FormData();
         formData.append('file',this.file);
 
@@ -96,14 +97,17 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
         uploadFunction(formData).then(res =>{
             if(res.data.code === 0){
               if(res.data.msg!=''){
+                this.loading = false
                 this.$message.error(res.data.msg)
               }
               else{
+                this.loading = false
                 this.$message.error('error when uploading the file')
               }
                 
             }
             if(res.data.code ===1){
+              this.loading = false
               this.$message.success('import successfully')
               if(this.redirectUrl != ''){
                 this.$router.push(this.redirectUrl)

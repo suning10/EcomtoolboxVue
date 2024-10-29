@@ -37,6 +37,7 @@
           <el-table 
                 :data="currentChange1"
                 :default-sort = "{prop: 'postDate', order: 'descending'}"
+                v-loading = loader
                 border
                 max-height="500"
                 style="width: 100%">
@@ -116,7 +117,8 @@
             :total="total1">
           </el-pagination >
       </el-tab-pane>
-      <el-tab-pane label= "Miss Reference NERP" name="2">
+      
+      <el-tab-pane label= "Miss Reference Synapse" name="2">
           <el-table 
                 :data="currentChange2"
                 max-height="500"
@@ -180,7 +182,8 @@
             :total="total2">
           </el-pagination >
       </el-tab-pane>
-      <el-tab-pane label= "Miss Reference Synapse" name="3">
+      <el-tab-pane label= "Miss Reference NERP" name="3">
+        <el-tooltip class="item" effect="dark" content="Synapse Has Reference while Nerp not" placement="top">
           <el-table 
                 :data="currentChange3"
                 border
@@ -227,7 +230,7 @@
                     width = 100>
                   </el-table-column>
           </el-table>
-          
+        </el-tooltip>
           <el-pagination 
             style="text-align: right;"
             @size-change="handleSizeChange"
@@ -239,6 +242,7 @@
             :total="total3">
           </el-pagination >
       </el-tab-pane>
+
       <el-tab-pane label= "Adjustment" name="4">
 
           
@@ -456,7 +460,11 @@
       </el-tab-pane>
       
       </el-tabs>
+      <p><i>Default Date Range is last 7 Days</i></p>
+      <br>
       <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
+
+
     </div>
   
   
@@ -576,6 +584,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   }
 
   private populateData(){
+    this.loader = true
     let apiCall = scrApiFactory("skuComparison")
     let payload = {'sku':this.sku,
                     'start': this.start,
@@ -586,6 +595,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     if(res.data.code == 1){
       this.rowData1 = res.data.data
       this.total1 = this.rowData1.length;
+      this.loader = false
     }
     else{
     this.$message.error("No Records Can Be Found")

@@ -1,6 +1,10 @@
 
 <template>
   <div>
+    <el-input
+          v-model="search"
+          size="mini"
+          placeholder="Type to search"/>
     <el-table 
             :data="currentChange"
             border
@@ -57,6 +61,7 @@ export default class extends Vue {
       page = 1;
       pageSize = 20;
       total = 0;
+      search =''
   created(){
       this.page = 1;
       this.pageSize = 20;
@@ -69,8 +74,9 @@ get currentChange(){
 const start = this.pageSize * (this.page - 1);
 const end = start + this.pageSize;
 this.total = this.rowData.length
-return this.rowData.slice(start,end);
+return this.rowData.filter(data => !this.search || data.material.toLowerCase().includes(this.search.toLowerCase())).slice(start,end);
 } 
+
 
 private handleSizeChange(size:number){
 this.pageSize = size;

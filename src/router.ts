@@ -206,7 +206,7 @@ const router = new Router({
           path: "SCR",
           component: () => import("@/views/scr/index.vue"),
           meta: {
-            title: "SCR",
+            title: "SCR (deprecated)",
           },
           children:[
             {
@@ -244,7 +244,26 @@ const router = new Router({
                 icon: "icon-category",
                 subgroup:true
               }
-            },
+            }
+          ]
+        },
+
+        {
+          path: "SCR Research",
+          component: () => import("@/views/scr/index.vue"),
+          meta: {
+            title: "SCR Research",
+          },
+          children:[
+            {
+              path: "/importSCR",
+              component: () => import("@/views/scr/importSCRFiles.vue"),
+              meta: {
+                title: "SCR Import",
+                icon: "icon-category",
+                subgroup: true
+              }
+            },           
             {
               path: "/scr/scrReasearch",
               component: () => import("@/views/scr/sCRResearch.vue"),
