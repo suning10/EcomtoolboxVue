@@ -511,8 +511,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
         created(){
 
             this.sku = this.$route.query.sku;
-            console.log(this.$route.query.sku)
-            console.log(this.sku)
             this.start = this.$route.query.start;
             this.end = this.$route.query.end;
             this.sloc = this.$route.query.sloc;
@@ -675,7 +673,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   }
   
   private handleClick(tab){
-        console.log(tab.index);
+
     }
 
     private exportToCSV() {

@@ -50,6 +50,7 @@
           includeSearch=1
           :start= start
           :end = end
+          sloc = "WR2E"
         ></scr-table>
 
       </el-tab-pane>
@@ -60,6 +61,7 @@
           includeSearch=1
           :start= start
           :end = end
+          sloc = "WR2E"
           ></scr-table>
 
       </el-tab-pane>
@@ -70,6 +72,7 @@
           includeSearch=1
           :start= start
           :end = end
+          sloc = "WR3E"
         ></scr-table>
       </el-tab-pane>
       <el-tab-pane label="WR3E Raw" name="7">
@@ -79,6 +82,7 @@
           includeSearch=1
           :start= start
           :end = end
+          sloc = "WR3E"
           ></scr-table>
       </el-tab-pane>
       <el-tab-pane label="WC3E Gap" name="8">
@@ -88,6 +92,7 @@
           includeSearch=1
           :start= start
           :end = end
+          sloc = "WC3E"
         ></scr-table>
       </el-tab-pane>
       <el-tab-pane label="WC3E Raw" name="9">
@@ -97,6 +102,7 @@
           includeSearch=1
           :start= start
           :end = end
+          sloc = "WC3E"
           ></scr-table>
       </el-tab-pane>
       <el-tab-pane label="DOD WC1E" name="10">
@@ -275,7 +281,6 @@ export default class extends Vue{
   private updateTime(){
     this.loader = true
     let today = new Date().getDate() - new Date(this.datePicked).getDate()
-    console.log(today)
     this.populateData(today.toString());
   }
 }
