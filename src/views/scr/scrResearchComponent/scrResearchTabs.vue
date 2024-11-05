@@ -10,11 +10,28 @@
             border
             max-height="500"
             style="width: 100%">
-            <el-table-column v-if="includeSearch == 1" label="Research" width="150">
+            <!-- <el-table-column v-if="includeSearch == 1" label="Research" width="150">
                 <template slot-scope="scope">
-                  <el-button type="text" @click="researchSKU(scope.row.material)">Check Activity</el-button>
+                  <el-button type="text" @click="researchSKU(scope.row.material,0)">Check Activity</el-button>
                 </template>
+              </el-table-column> -->
+              <el-table-column v-if="includeSearch == 1" label="Research" width="150">
+                <el-button type="text" @click="dialogVisible = true">Research</el-button>
               </el-table-column>
+
+              <el-dialog
+                title="Research"
+                :visible.sync="dialogVisible"
+                width="30%"
+                >
+                <span>Choose Research All Sloc or Only Current Sloc</span>
+                <span slot="footer" class="dialog-footer">
+                  <template slot-scope="scope">
+                  <el-button type="text" @click="researchSKU(scope.row.material,0)">Currrent Sloc</el-button>
+                  <el-button type="text" @click="researchSKU(scope.row.material,1)">All Sloc</el-button>
+                </template>              
+                </span>
+              </el-dialog>
               <el-table-column v-for="column in columnNames"
                 :key = "column"
                 :prop="column"
@@ -62,10 +79,12 @@ export default class extends Vue {
       pageSize = 20;
       total = 0;
       search =''
+      dialogVisible = false
   created(){
       this.page = 1;
       this.pageSize = 20;
       this.total = this.rowData.length;
+      this.dialogVisible = false
   }
 
 
@@ -110,14 +129,14 @@ this.page = page
   return header + '\n' + rows.join('\n');
   }
 
-  private researchSKU(sku){
+  private researchSKU(sku,flag){
     this.$router.push(
       {
             path:'/scr/skuReasearch' ,
             query:{'sku':sku,
                   'start':this.start,
                   'end':this.end,
-                  'sloc':this.sloc
+                  'sloc': flag ==0 ? this.sloc :'all'
             }
           }
     ) 
