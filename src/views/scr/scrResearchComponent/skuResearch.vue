@@ -122,6 +122,7 @@
           <el-table 
                 :data="currentChange2"
                 max-height="500"
+                v-loading = loader
                 border
                 style="width: 100%">
                   <el-table-column 
@@ -188,6 +189,7 @@
                 :data="currentChange3"
                 border
                 max-height="500"
+                v-loading = loader
                 style="width: 100%">
                 <el-table-column 
                     prop="reference"
@@ -578,7 +580,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     this.start = new Date(this.selectedDate[0]).toISOString().slice(0,10);
     this.end = new Date(this.selectedDate[1]).toISOString().slice(0,10);
     this.populateData();
-    this.loader = false
   }
 
   private populateData(){
@@ -593,7 +594,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     if(res.data.code == 1){
       this.rowData1 = res.data.data
       this.total1 = this.rowData1.length;
-      this.loader = false
+      
     }
     else{
     this.$message.error("No Records Can Be Found")
@@ -616,6 +617,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     if(res.data.code == 1){
       this.rowData3 = res.data.data
       this.total3 = this.rowData3.length;
+      this.loader = false
     }
     else{
     this.$message.error("No Records Can Be Found")
