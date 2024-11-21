@@ -7,6 +7,13 @@ export const scrSKUComparison = (data:any) =>
     data
   });
 
+  export const scrSKUComparisonAll = (data:any) =>  
+    request({
+    'url': `/scr/skuComparisionAll`,
+    'method': 'post',
+    data
+  });
+
   export const scrSKUComparisonMissingNerp = (data:any) =>  
     request({
     'url': `/scr/skuComparisionMissingNerp`,
@@ -45,6 +52,20 @@ export const scrSKUComparison = (data:any) =>
   export const skuSummaryNERPAdj = (data:any) =>  
     request({
     'url': `/scr/skuSummaryNERPAdj`,
+    'method': 'post',
+    data
+  });
+
+  export const skuComparisionMissingItemActivityEmail = (data:any) =>  
+    request({
+    'url': `/scr/skuComparisionMissingItemActivityEmail`,
+    'method': 'post',
+    data
+  });
+
+  export const skuComparisionMissingNerpEmail = (data:any) =>  
+    request({
+    'url': `/scr/skuComparisionMissingNerpEmail`,
     'method': 'post',
     data
   });

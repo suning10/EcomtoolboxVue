@@ -460,6 +460,90 @@
             :total="total7">
           </el-pagination >
       </el-tab-pane>
+      <el-tab-pane label= "All References" name="7">
+          <el-table 
+                :data="currentChange8"
+                :default-sort = "{prop: 'postDate', order: 'descending'}"
+                v-loading = loader
+                border
+                max-height="500"
+                style="width: 100%">
+                  <el-table-column 
+                    fixed = "left"
+                    prop="reference"
+                    label= "Ref"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="item"
+                    label= "Item"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="transactionType"
+                    label= "Type"
+                    sortable
+                    width = 120>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="po"
+                    label= "PO"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="inventoryStatus"
+                    label= "inventoryStatus"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="mvt"
+                    label= "Mvt"
+                    width = 80>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="postDate"
+                    label= "PostDate"
+                    sortable
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="postTime"
+                    label= "EnterTime"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="entryDate"
+                    label= "EntryDate"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="synapseQty"
+                    label= "SynapseQty"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="nerpQty"
+                    label= "nerpQty"
+                    width = 180>
+                  </el-table-column>
+                  <el-table-column 
+                    prop="valType"
+                    label= "Val"
+                    width = 80>
+                  </el-table-column>
+          </el-table>
+
+          <el-pagination 
+            style="text-align: right;"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="page"
+            :page-sizes="[10, 50, 100, 1000]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total8">
+          </el-pagination >
+      </el-tab-pane>
       
       </el-tabs>
       <p><i>Default Date Range is last 7 Days</i></p>
@@ -491,6 +575,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
         rowData5 = []
         rowData6 = []
         rowData7 = []
+        rowData8 = []
         total1 = 0;
         total2 = 0;
         total3 = 0;
@@ -498,6 +583,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
         total5 = 0;
         total6 = 0;
         total7 = 0;
+        total8=0
         start:any
         end: any
         sloc: any
@@ -564,6 +650,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   const end = start + this.pageSize;
   return this.rowData7.slice(start,end);
   } 
+
+  get currentChange8(){
+  const start = this.pageSize * (this.page - 1);
+  const end = start + this.pageSize;
+  return this.rowData8.slice(start,end);
+  } 
   
   private handleSizeChange(size:number){
   this.pageSize = size;
@@ -617,7 +709,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     if(res.data.code == 1){
       this.rowData3 = res.data.data
       this.total3 = this.rowData3.length;
-      this.loader = false
     }
     else{
     this.$message.error("No Records Can Be Found")
@@ -666,6 +757,19 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     if(res.data.code == 1){
       this.rowData7 = res.data.data
       this.total7 = this.rowData5.length;
+    }
+    else{
+    this.$message.error("No Records Can Be Found")
+  }
+    })
+
+    apiCall = scrApiFactory("skuComparisonAll")
+    apiCall(payload).then((res) =>{
+    if(res.data.code == 1){
+      this.rowData8 = res.data.data
+      this.total8 = this.rowData8.length;
+      this.loader = false
+      
     }
     else{
     this.$message.error("No Records Can Be Found")

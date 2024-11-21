@@ -29,5 +29,8 @@ export const scrApiFactory = (name:string) => {
     if(name == "skuSummarySynapseAdj"){
         return flist.skuSummarySynapseAdj
     }
+    if(name == "skuComparisonAll"){
+        return flist.scrSKUComparisonAll
+    }
 
 }

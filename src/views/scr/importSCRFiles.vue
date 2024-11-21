@@ -39,6 +39,17 @@
             api = "uploadFileSkuItemActivity"
       ></upload-file>
         </el-tab-pane>
+        <el-tab-pane label="Send Missing References" name = "4">
+          <el-date-picker       
+                  v-model="selectedDate"
+                  type="daterange"
+                  range-separator="To"
+                  unlink-panels
+                  start-placeholder="Start date"
+                  end-placeholder="End date">
+          </el-date-picker>
+        <el-button type="primary" @click="send" :loading = loader>Send</el-button>
+        </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -49,6 +60,7 @@
 <script lang="ts">
 import { Vue,Component, Ref} from 'vue-property-decorator'
 import UploadFile from "@/components/FileUpload/index.vue"
+import { skuComparisionMissingItemActivityEmail } from '@/api/scr';
 //import { uploadFile } from '@/api/common'
 @Component({
   name: 'importSCRFiles',
@@ -59,6 +71,29 @@ import UploadFile from "@/components/FileUpload/index.vue"
 export default class extends Vue{
 
   activeName = '1';
+  selectedDate = ''
+  loader = false
+  start =''
+  end = ''
+
+  private send(){
+    this.start = new Date(this.selectedDate[0]).toISOString().slice(0,10);
+    this.end = new Date(this.selectedDate[1]).toISOString().slice(0,10);
+    let payload = {
+      'start': this.start,
+      'end' : this.end,    
+    } 
+    skuComparisionMissingItemActivityEmail(payload).then((res) =>{
+      this.$message.success("Email Has Been Queued")
+      if(res.data.code == 1){
+        console.log("email sent")
+    }
+    else{
+    this.$message.error("No Records Can Be Found")
+  }
+
+    })
+  }
 }
 </script>
 
