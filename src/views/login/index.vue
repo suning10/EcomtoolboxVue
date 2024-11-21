@@ -79,7 +79,7 @@ export default class extends Vue {
     username: [{ validator: this.validateUsername, trigger: 'blur' }]
   }
   private loading = false
-  private redirect?: string
+
 
   @Watch('$route', { immediate: true })
   private onRouteChange(route: Route) {}
@@ -93,7 +93,14 @@ export default class extends Vue {
           .then((res: any) => {
             if (String(res.code) === '1') {
               //登录成功，跳转到系统首页
-              this.$router.push('/')
+              //try to get redirect url from query
+
+              let redirect = this.$route.query.redirect?this.$route.query.redirect:'/'
+              console.log(redirect)
+
+                this.$router.push(redirect.toString());
+
+              
             } else {
               // this.$message.error(res.msg)
               this.loading = false

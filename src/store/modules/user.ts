@@ -26,11 +26,19 @@ class User extends VuexModule implements IUserState {
   public userInfo = {}
   public roles: string[] = []
   public username = Cookies.get('username') || ''
+  public redirectURL = ''
 
   @Mutation
   private SET_TOKEN(token: string) {
     this.token = token
   }
+
+  
+  @Mutation
+  private SET_REDIRECTURL(url: string) {
+    this.redirectURL = url
+  }
+
 
   @Mutation
   private SET_NAME(name: string) {
@@ -95,6 +103,11 @@ class User extends VuexModule implements IUserState {
   }
 
   @Action
+  public RedirectURL (url) {
+    this.context.commit('SET_REDIRECTURL',url)
+  }
+
+  @Action
   public async changeStore(data: any) {
     this.SET_STOREID = data.data
     this.SET_TOKEN(data.authorization)
@@ -135,6 +148,7 @@ class User extends VuexModule implements IUserState {
     Cookies.remove('username')
     Cookies.remove('user_info')
     removeUserInfo()
+    this.SET_REDIRECTURL('')
   }
 }
 

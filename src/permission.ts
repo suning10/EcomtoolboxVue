@@ -16,7 +16,9 @@ if(process.env.VUE_APP_Enable_Login === '1'){
       next()
     } else {
       if (!to.meta.notNeedAuth) {
-        next('/login')
+        next({path:'/login',
+              query: {redirect: to.fullPath}
+        })
       } else {
         next()
       }
