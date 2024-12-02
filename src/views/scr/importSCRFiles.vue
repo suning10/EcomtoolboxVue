@@ -39,7 +39,7 @@
             api = "uploadFileSkuItemActivity"
       ></upload-file>
         </el-tab-pane>
-        <el-tab-pane label="Send Missing References" name = "4">
+        <el-tab-pane label="Send Missing References" name = "4" disabled>
           <el-date-picker       
                   v-model="selectedDate"
                   type="daterange"

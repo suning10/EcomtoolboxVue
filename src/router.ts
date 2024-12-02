@@ -235,15 +235,6 @@ const router = new Router({
                 icon: "icon-category",
                 subgroup:true
               }
-            },
-            {
-              path: "/dod",
-              component: () => import("@/views/scr/dodResearch.vue"),
-              meta: {
-                title: "DOD Research",
-                icon: "icon-category",
-                subgroup:true
-              }
             }
           ]
         },
@@ -281,6 +272,15 @@ const router = new Router({
               meta: {
                 title: "SCR Research",
                 hidden: true
+              }
+            },
+            {
+              path: "/dod",
+              component: () => import("@/views/scr/dodResearch.vue"),
+              meta: {
+                title: "DOD Research",
+                icon: "icon-category",
+                subgroup:true
               }
             }
           ]

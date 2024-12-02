@@ -30,3 +30,11 @@ export const scrReportDOD = (sloc:string) =>
 });
   
 
+export const scrResearchDOD = (material:string,sloc:string) =>  
+  request({
+  'url': `/scr/dodResearch`,
+  'method': 'get',
+  params: { material:material,sloc:sloc }
+});
+  
+

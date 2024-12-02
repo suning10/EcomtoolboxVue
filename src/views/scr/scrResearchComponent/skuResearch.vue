@@ -805,6 +805,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
       if(this.active_name == '6'){
         data = this.rowData7 
       }
+      if(this.active_name == '7'){
+        data = this.rowData8 
+      }
       
       const csvContent = this.convertToCSV(data);
       const blob = new Blob([csvContent], { type: 'text/csv' });

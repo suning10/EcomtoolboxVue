@@ -30,6 +30,8 @@ service.interceptors.response.use(
   (response: any) => {
     // console.log(response, 'response')
     if (response.data.status === 401) {
+      console.log(response.config.url)
+      console.log(response)
       router.push('/login')
     }
     //请求响应中的config的url会带上代理的api需要去掉
