@@ -63,6 +63,13 @@
                     label="Gap"
                     width="250">
                   </el-table-column>
+                  <el-table-column label="Research" width="150">
+                    <template slot-scope="scope">
+                      <el-button type="text" @click="researchSKU(scope.row.material,1,scope.row.date)">AllSloc</el-button>
+                      <el-button type="text" @click="researchSKU(scope.row.material,0,scope.row.date)">{{sloc}}</el-button>
+                    </template>
+                  </el-table-column>
+
                 </el-table>
       
                 <el-pagination 
@@ -75,10 +82,11 @@
                   layout="total, sizes, prev, pager, next, jumper"
                   :total="total">
               </el-pagination >
-      
-                <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
-                <el-button type="primary" @click="goBack(false)">Back</el-button>
-                <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
+              <p><i>Research is chosen day - 1 to chosen day</i></p>
+              <br>
+              <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
+              <el-button type="primary" @click="goBack(false)">Back</el-button>
+              <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
       
               </div>
       
@@ -192,6 +200,28 @@
     }
     this.displayResult = !this.displayResult;
     }
+
+    private researchSKU(sku,flag,date:string){
+    
+    var stripdate = date.includes('\r') ? date.replace('\r','') : date
+    var formatDate = stripdate.replace(/(..).(..).(....)/, "$3-$1-$2");
+    var start = new Date(formatDate)
+    start.setDate(start.getDate() - 1)
+    var strStart = start.toISOString().split('T')[0]
+    console.log(strStart)
+
+    this.$router.push(
+      {
+            path:'/scr/skuReasearch' ,
+            query:{'sku':sku,
+                  'start':strStart,
+                  'end':formatDate,
+                  'sloc': flag == 0 ? this.sloc :'all'
+            }
+          }
+    ) 
+  }
+
     }
     </script>
     

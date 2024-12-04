@@ -50,9 +50,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-
+/*
+  includeSearch indicates if a search function is needed
+  search is redirect to skuResearch
+*/ 
 @Component({
-  name: 'scrTable',
+  name: 'scrTable', // this is a template of tables for all the tabs in SCR Research, this is being used in SCRResearch.vue 
 })
 export default class extends Vue {
   @Prop() private columnNames!: []
