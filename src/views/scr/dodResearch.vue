@@ -100,6 +100,7 @@
     
     <script lang="ts">
     import { scrResearchDOD } from '@/api/scrReport';
+    import { getSelctedSloc, getSelectedDate, getSku, setSelectedDate, setSelectedSloc, setSku } from '@/utils/cookies';
     import { Vue,Component} from 'vue-property-decorator'
 
     @Component({
@@ -114,8 +115,8 @@
     private total = 0;
     private currentData = [];
     private selectedDate = '';
-    private sloc = ''
-    private sku = ''
+    private sloc = getSelctedSloc()?getSelctedSloc():''
+    private sku = getSku()? getSku():''
     
     
     private summaryFlag = true;
@@ -208,7 +209,11 @@
     var start = new Date(formatDate)
     start.setDate(start.getDate() - 1)
     var strStart = start.toISOString().split('T')[0]
-    console.log(strStart)
+    
+
+    //setSelectedDate(this.)
+    setSelectedSloc(this.sloc)
+    setSku(this.sku)
 
     this.$router.push(
       {

@@ -35,3 +35,19 @@ export const removePrint = () => Cookies.remove(printKey);
 const newData = 'new';
 export const getNewData = () => Cookies.get(newData);
 export const setNewData = (val: Object) => Cookies.set(newData, val);
+
+//get current sku 
+const sku = 'sku';
+export const getSku = () => Cookies.get(sku);
+export const setSku = (val: string) => Cookies.set(sku, val);
+
+//get current date 
+const date = 'date';
+export const getSelectedDate = () => Cookies.get(date);
+export const setSelectedDate = (val: string) => Cookies.set(date, val);
+
+//get current date 
+const sloc = 'sloc';
+export const getSelctedSloc = () => Cookies.get(sloc);
+export const setSelectedSloc = (val: string) => Cookies.set(sloc, val);
+
