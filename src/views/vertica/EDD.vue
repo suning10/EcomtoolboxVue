@@ -211,7 +211,7 @@
                 :total="total">
             </el-pagination >
     
-              <el-button type="primary" @click="exportToCSV" v-if="!summaryFlag">ExportToCSV</el-button>
+              <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
               <el-button type="primary" @click="goBack(false)">Back</el-button>
               <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
     
