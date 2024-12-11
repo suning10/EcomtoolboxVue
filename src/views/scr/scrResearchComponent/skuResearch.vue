@@ -30,6 +30,7 @@
                   end-placeholder="End date">
           </el-date-picker>
         <el-button type="primary" @click="updateTime" :loading = loader>Update</el-button>
+        <p style="text-align: right;" ><i>{{ updateDate }}</i></p>
       </div>
 
       <el-tabs v-model="active_name" @tab-click="handleClick">
@@ -557,7 +558,8 @@
   </template>
   
   <script lang="ts">
-  import { scrApiFactory } from '@/api/scrFactory';
+  import { getUpdateDate } from '@/api/scr';
+import { scrApiFactory } from '@/api/scrFactory';
 import { Component, Prop, Vue } from 'vue-property-decorator'
   
   @Component({
@@ -595,6 +597,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
         adjSummarySynapseTotal = 0
         adjSummaryNerpTotalText = ''
         adjSummarySynapseTotalText = ''
+        updateDate = ''
 
         created(){
 
@@ -603,7 +606,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
             this.end = this.$route.query.end;
             this.sloc = this.$route.query.sloc;
             this.active_name = '1'
+            this.getUpdateDateFromDB()
             this.populateData()
+            
 
 
         }
@@ -666,6 +671,17 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   this.page = page
   }
   
+  private getUpdateDateFromDB(){
+
+    getUpdateDate().then((res) =>{
+      if(res.data.code == 1){
+        this.updateDate = res.data.data
+        console.log(res.data.data)
+      }
+    })
+  }
+
+
 
   private updateTime(){
     this.loader = true

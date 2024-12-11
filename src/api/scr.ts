@@ -70,3 +70,9 @@ export const scrSKUComparison = (data:any) =>
     data
   });
 
+  export const getUpdateDate = () =>  
+    request({
+    'url': `/scr/getLatestResearchDate`,
+    'method': 'get'
+  });
+
