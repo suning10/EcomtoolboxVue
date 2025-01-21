@@ -332,6 +332,16 @@ const router = new Router({
                 subgroup:true
               }
             },
+
+            {
+              path: "/eddCE",
+              component: () => import("@/views/vertica/EDDCE.vue"),
+              meta: {
+                title: "EDDCE",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
             
             {
               path: "/upsOrigin",

@@ -59,5 +59,13 @@ export const pkgCountDelivered = (startDate, endDate) =>
       params: { start: start,end:end }
     });
 
+      //eddDTO {idList:[],searchFlag:PO/DO/Tracking}
+    export const eddCeSearch = (data:any) =>  
+      request({
+      'url': `/vertica/eddCE`,
+      'method': 'post',
+      data
+  });
+
 
   

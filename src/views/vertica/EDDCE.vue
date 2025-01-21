@@ -1,7 +1,7 @@
 <template>
 
     <div class="addBrand-container">
-      <h2 style="text-align: center; margin-bottom: 10px;">Quick Order Search MX Only</h2>
+      <h2 style="text-align: center; margin-bottom: 10px;">Quick Order Search ALL</h2>
         <div class="container">
             <el-form ref="form" :model="ruleform " label-width="240px" v-if="!displayResult">
     
@@ -18,18 +18,6 @@
                   <el-option
                     label="Tracking Number"
                     :value=2>
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label = "With Details?">
-                <el-select v-model=summaryFlag placeholder="Select" >
-                  <el-option
-                    label="Only EDD"
-                    :value=true>
-                  </el-option>
-                  <el-option
-                    label="Detail"
-                    :value=false>
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -65,115 +53,7 @@
     
             </el-form>
             <div v-else>
-              <el-table v-if = "!summaryFlag"
-              :data="currentChange"
-              border
-              style="width: 100%">
-                <el-table-column
-                  prop="poId"
-                  label="poId"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="doId"
-                  label="DO"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="orderTsEst"
-                  label="Order Date"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="shippedSku"
-                  label="SKU"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="salesPrice"
-                  label="Sales Price"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="listPrice"
-                  label="List Price"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="shippingAmt"
-                  label="Shipping Cost"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="shippedQty"
-                  label="qty"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="physicalFulfillerId"
-                  label="Fulfiller"
-                  width="180">
-                </el-table-column>
-                <!-- <el-table-column
-                  prop="tracking"
-                  label="tracking"
-                  width="180">
-                </el-table-column> -->
-                <el-table-column label="tracking" width="180">
-                  <template slot-scope="scope">
-                    <a v-if="scope.row.fulfillmentCarrierId == 'ups'" :href = "'https://www.ups.com/track?loc=en_US&tracknum=' + scope.row.tracking + '&requester=ST/trackdetails'" target="_blank" style="color: blue; text-decoration: underline;">
-                      {{ scope.row.tracking }}
-                    </a>
-                    <a v-else-if="scope.row.fulfillmentCarrierId == 'fedex'" :href = "'https://www.fedex.com/fedextrack/?trknbr=' + scope.row.tracking" target="_blank" style="color: blue; text-decoration: underline;">
-                      {{ scope.row.tracking }}
-                    </a>
-                    <a v-else>{{ scope.row.tracking }}</a>
-                  </template>
-
-                </el-table-column>
-                <el-table-column
-                  prop="edd"
-                  label="EDD"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="orderEntryDate"
-                  label="Entry Date"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="shipScanDate"
-                  label="Ship Date"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="deliveredTs"
-                  label="Delivered Date"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="cancellationStatus"
-                  label="Cancelled Status"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="cancellationReason"
-                  label="Cancelled Reason"
-                  width="180">
-                </el-table-column> 
-                <el-table-column
-                  prop="lineItemStatus"
-                  label="Line Item Status"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="orderStatus"
-                  label="Order Status"
-                  width="180">
-                </el-table-column>           
-              </el-table>
-
-              <el-table v-else 
+              <el-table
               :data="currentChange"
               border
               style="width: 100%">
@@ -190,6 +70,16 @@
                 <el-table-column
                   prop="tracking"
                   label="tracking"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="shippedSku"
+                  label="shippedSku"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="listPrice"
+                  label="listPrice"
                   width="180">
                 </el-table-column>
                 <el-table-column
@@ -226,10 +116,10 @@
     </template>
   <script lang="ts">
   
-  import { eddSearch } from '@/api/vertica';
+  import { eddCeSearch } from '@/api/vertica';
   import { Vue,Component} from 'vue-property-decorator'
   @Component({
-    name: 'EDD',
+    name: 'EDDCE',
   })
   export default class extends Vue{
     private ruleform = {
@@ -268,60 +158,7 @@
   private displayResult = false;
   private tableData = [];
   
-  
-  
-  // private rdoSearch(){
-  
-  // if(this.ruleform.id.length > 1){
-  // const data = this.ruleform.id.split('\n').filter(
-  //     item => item.trim().length > 0
-  //   )
-  //   const d = Array.from(new Set(data))
-  // const payload = {'rdo':d};
-  // searchByRDO(payload).then((res) =>{
-  // if(res.data.code === 1){
-  //   console.log(res.data);
-  //   this.tableData = res.data.data
-  //   this.total = this.tableData.length;
-  // }
-  // })
-  // this.displayResult = !this.displayResult;
-  // } 
-  
-  // else{
-  // this.$message.error('Please enter RDO or PO&SKU ')
-  // }
-  
-  // }
-  
-  // private poSearch(){
-  
-  // if(this.ruleform.poId.length > 1){
-  //   // split by \n and remove blank
-  //   const data = this.ruleform.poId.split('\n').filter(
-  //     item => item.trim().length > 0
-  //   )
-  //   const d = Array.from(new Set(data))
-  
-  //   const payload = {'rdo':d};
-  //   searchByPO(payload).then((res) =>{
-  //   if(res.data.code === 1){
-  //     this.tableData = res.data.data
-  //   }
-  //   else{
-  //     this.$message.warning("no result found")
-  //   }
-  // })
-  //   this.displayResult = !this.displayResult;
-  // } 
-  
-  // else{
-  //   this.$message.error('Please enter RDO or PO&SKU ')
-  // }
-  
-  // }
-
-  private clear(){
+   private clear(){
     this.ids = '';
     this.loader = false
   }
@@ -347,7 +184,7 @@
         }
         
         try{
-        eddSearch(payload).then((res) => {
+        eddCeSearch(payload).then((res) => {
           if(res.data.code === 1){
         this.tableData = res.data.data;
         this.total = this.tableData.length;
@@ -360,12 +197,6 @@
         this.$message.warning("no result found")
           }
         }) ;}catch(error){this.$message.error(error);}
-      
-  
-  
-
-        
-      
     }
   
   
