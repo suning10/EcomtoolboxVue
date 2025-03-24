@@ -282,6 +282,15 @@ const router = new Router({
                 icon: "icon-category",
                 subgroup:true
               }
+            },
+            {
+              path: "/missingTransactions",
+              component: () => import("@/views/scr/scrMissingTransaction.vue"),
+              meta: {
+                title: "MissingTransactions",
+                icon: "icon-category",
+                subgroup:true
+              }
             }
           ]
         },

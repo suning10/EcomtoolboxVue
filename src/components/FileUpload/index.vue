@@ -114,6 +114,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
               }
               
             }
+        }).catch(error => {
+          this.$msgbox.alert(error)
         });
       }
   

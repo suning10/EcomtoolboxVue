@@ -36,5 +36,12 @@ export const scrResearchDOD = (material:string,sloc:string) =>
   'method': 'get',
   params: { material:material,sloc:sloc }
 });
+
+export const scrMissingTransactions = (start:string,end:string,email:string) =>  
+  request({
+  'url': `/scr/missingTransaction`,
+  'method': 'get',
+  params: { start:start,end:end,email:email }
+});
   
 
