@@ -227,15 +227,7 @@ const router = new Router({
                 subgroup:true
               }
             },
-            {
-              path: "/history",
-              component: () => import("@/views/scr/scrHistory.vue"),
-              meta: {
-                title: "SCR History",
-                icon: "icon-category",
-                subgroup:true
-              }
-            }
+
           ]
         },
 
@@ -288,6 +280,15 @@ const router = new Router({
               component: () => import("@/views/scr/scrMissingTransaction.vue"),
               meta: {
                 title: "MissingTransactions",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+            {
+              path: "/history",
+              component: () => import("@/views/scr/scrHistory.vue"),
+              meta: {
+                title: "SCR Trend",
                 icon: "icon-category",
                 subgroup:true
               }

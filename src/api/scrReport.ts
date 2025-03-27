@@ -44,4 +44,10 @@ export const scrMissingTransactions = (start:string,end:string,email:string) =>
   params: { start:start,end:end,email:email }
 });
   
+export const scrTrend = (start:string,end:string) =>  
+  request({
+  'url': `/scr/getSCRTrend`,
+  'method': 'get',
+  params: { start:start,end:end}
+});
 

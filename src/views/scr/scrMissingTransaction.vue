@@ -15,6 +15,7 @@
                     </el-date-picker>
                     <br>
                     <p> To choose a single day, click on that date twice. Otherwise, select a range</p>
+                    <p> Please Note Data Refreshed Everyday at 10AM</p>
                 </el-form-item>
               <el-form-item label="Please enter your email address">
                   <el-input  v-model="email" style="width:300px"></el-input>

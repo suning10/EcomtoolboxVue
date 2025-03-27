@@ -1,5 +1,6 @@
 <template>
   <div
+    ref = "chart"
     :id="id"
     :class="className"
     :style="{height: height, width: width}"
@@ -24,13 +25,17 @@ export default class extends mixins(ResizeMixin) {
         @Prop({ 'default': 'Requests' }) private title!: string
 
         mounted() {
-            this.$nextTick(() => {
-                this.initChart();
-            });
+            this.init()
+        }
+
+        private init(){
+          this.$nextTick(() => {
+            this.initChart();
+          });
         }
 
         private initChart() {
-            this.chart = echarts.init(document.getElementById(this.id) as HTMLDivElement);
+            this.chart = echarts.init(this.$refs.chart as HTMLDivElement);
             this.chart.setOption({
                 'backgroundColor': '#fff',
                 'title': {
