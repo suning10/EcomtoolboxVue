@@ -54,7 +54,7 @@ created() {
     const end = endDate.toISOString().split('T')[0];
 
     try{
-            scrTrend(start,end).then((res) => {
+            scrTrend(end,start).then((res) => {
             if(res.data.code === 1){
                 this.currentData = res.data.data
                 }
