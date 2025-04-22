@@ -560,7 +560,7 @@
   <script lang="ts">
   import { getUpdateDate } from '@/api/scr';
 import { scrApiFactory } from '@/api/scrFactory';
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue ,Watch} from 'vue-property-decorator'
   
   @Component({
     name: 'skuResearch',
@@ -612,6 +612,31 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 
         }
+
+        @Watch('active_name')
+        onTabChange(newVal){
+            if(newVal == '7'){
+              this.loader = true
+              let payload = {'sku':this.sku,
+                    'start': this.start,
+                    'end' : this.end,
+                    'sloc': this.sloc
+    }
+              let apiCall = scrApiFactory("skuComparisonAll")
+              apiCall(payload).then((res) =>{
+              if(res.data.code == 1){
+                this.rowData8 = res.data.data
+                this.total8 = this.rowData8.length;
+                this.loader = false
+                
+              }
+              else{
+              this.$message.error("No Records Can Be Found")
+            }
+              })
+            }
+        }
+
 
         
   get currentChange1(){
@@ -779,6 +804,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   }
     })
 
+    /*
     apiCall = scrApiFactory("skuComparisonAll")
     apiCall(payload).then((res) =>{
     if(res.data.code == 1){
@@ -791,7 +817,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     this.$message.error("No Records Can Be Found")
   }
     })
-
+    */
   }
   
   private handleClick(tab){
