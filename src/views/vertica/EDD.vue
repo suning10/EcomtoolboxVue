@@ -212,6 +212,7 @@
             </el-pagination >
     
               <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
+              <el-button type="primary" @click="exportToXLSX">ExportToXLSX</el-button>
               <el-button type="primary" @click="goBack(false)">Back</el-button>
               <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
     
@@ -228,6 +229,8 @@
   
   import { eddSearch } from '@/api/vertica';
   import { Vue,Component} from 'vue-property-decorator'
+  import * as XLSX from 'xlsx'
+  import {saveAs} from 'file-saver'
   @Component({
     name: 'EDD',
   })
@@ -390,6 +393,22 @@
   }).join(',');
   });
   return header + '\n' + rows.join('\n');
+  }
+
+
+  private exportToXLSX(){
+
+const worksheet = XLSX.utils.json_to_sheet(this.tableData)
+      // Create a new workbook and append the worksheet
+const workbook = XLSX.utils.book_new()
+XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+
+// Write the workbook to binary array
+const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+
+// Create a Blob and trigger download
+const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
+saveAs(blob, 'export.xlsx')
   }
   
   private goBack(clean:boolean){

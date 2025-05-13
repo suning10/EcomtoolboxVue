@@ -727,6 +727,7 @@ import { Component, Prop, Vue ,Watch} from 'vue-property-decorator'
     if(res.data.code == 1){
       this.rowData1 = res.data.data
       this.total1 = this.rowData1.length;
+      this.loader = false
       
     }
     else{
