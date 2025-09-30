@@ -67,5 +67,12 @@ export const pkgCountDelivered = (startDate, endDate) =>
       data
   });
 
+  export const rdoSearch = (data:any) =>  
+    request({
+    'url': `/vertica/RDOVertica`,
+    'method': 'post',
+    data
+});
+
 
   

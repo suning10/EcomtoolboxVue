@@ -16,7 +16,7 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="SCR Summary" name="1">
         <scr-table
-        :columnNames="['sloc','absoluteGapCost','netGapCost','absoluteGap','netGap','skuWithError','skuWithErrorNumber','nerpOverage','synapseOverage']"
+        :columnNames="['sloc','absoluteGapCost','netGapCost','absoluteGap','netGap','skuWithError','skuWithErrorNumber','nerpOverage','synapseOverage','totalValue','totalQty']"
         :rowData = rowData1
         includeSearch=0
 

@@ -1,0 +1,349 @@
+<template>
+
+    <div class="addBrand-container">
+      <h2 style="text-align: center; margin-bottom: 10px;">PO/RDO/GPV2 Refund Status Search</h2>
+        <div class="container">
+            <el-form ref="form" :model="ruleform " label-width="240px" v-if="!displayResult">
+    
+              <el-form-item label = "Search By">
+                <el-select v-model=critiria placeholder="Select" >
+                  <el-option
+                    label="PO"
+                    :value=0>
+                  </el-option>
+                  <el-option
+                    label="RDO"
+                    :value=1>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="PO" v-if="critiria == 0">
+              <el-input type="textarea" v-model="ids" 
+              placeholder="Please Enter PO, One at a line" 
+              rows="30"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="RDO" v-else>
+              <el-input type="textarea" v-model="ids" 
+              placeholder="Please Enter RDO Number, One at a line" 
+              rows="30"
+              >
+              </el-input>
+            </el-form-item>
+              <el-form-item>
+                  <el-button type="primary" @click="search" :loading = loader >Search</el-button>
+                  <el-button type="primary" @click="clear">Clear</el-button>
+              </el-form-item>
+
+
+  
+              <!-- <div class="loader" v-if="loader"></div> -->
+    
+            </el-form>
+            <div v-else>
+              <el-table
+              :data="currentChange"
+              border
+              max-height="500"
+              v-loading = loader
+              style="width: 100%">
+              <el-table-column
+                  prop="poId"
+                  label="po"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="soId"
+                  label="SO"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="odo"
+                  label="Outbound DO"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="rdo"
+                  label="rdo"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="sku"
+                  label="sku"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="quantity"
+                  label="quantity"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="refundStatus"
+                  label="refundStatus"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="returnChannel"
+                  label="returnChannel"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="returnReason"
+                  label="returnReason"
+                  width="300">
+                </el-table-column>
+                <el-table-column
+                  prop="returnTrackingId"
+                  label="returnTrackingId"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="returnStatus"
+                  label="returnStatus"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="returnShippedTs"
+                  label="returnShippedTs"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="labelGeneratedTs"
+                  label="labelGeneratedTs"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="initiatedTs"
+                  label="initiatedTs"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="returnSubReasonCode"
+                  label="returnSubReasonCode"
+                  width="300">
+                </el-table-column>
+                <el-table-column
+                  prop="returnAddressId"
+                  label="returnAddressId"
+                  width="180">
+                </el-table-column>
+                
+              </el-table>
+    
+              <el-pagination 
+                style="text-align: right;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="page"
+                :page-sizes="[10, 50, 100, 1000]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination >
+    
+              <el-button type="primary" @click="exportToCSV">ExportToCSV</el-button>
+              <el-button type="primary" @click="exportToXLSX">ExportToXLSX</el-button>
+              <el-button type="primary" @click="goBack(false)">Back</el-button>
+              <el-button type="primary" @click="goBack(true)">Clear and Back</el-button>
+    
+            </div>
+    
+    
+    
+        </div>
+    
+    
+    </div>
+    </template>
+  <script lang="ts">
+  
+  import { rdoSearch } from '@/api/vertica';
+  import { Vue,Component} from 'vue-property-decorator'
+  import * as XLSX from 'xlsx'
+  import {saveAs} from 'file-saver'
+
+  @Component({
+    name: 'RDOSearch',
+  })
+  export default class extends Vue{
+    private ruleform = {
+  
+    }
+  
+  //pagination settings
+  private page = 1;
+  private pageSize = 20;
+  private total = 0;
+  private currentData = [];
+  private selectedDate = '';
+  private ids = ''
+  private summaryFlag = true;
+  
+  //control the spin 
+  private loader = false;
+
+  get currentChange(){
+  const start = this.pageSize * (this.page - 1);
+  const end = start + this.pageSize;
+  return this.tableData.slice(start,end);
+  } 
+  
+  private handleSizeChange(size:number){
+  this.pageSize = size;
+  this.page = 1;
+  }
+  
+  private handleCurrentChange(page:number){
+  this.page = page
+  }
+  
+  private emptyRDO = true;
+  private critiria = 0;
+  private displayResult = false;
+  private tableData = [];
+  
+   private clear(){
+    this.ids = '';
+    this.loader = false
+  }
+  
+  private search(){
+
+    this.loader = true;
+    const data = this.ids.split('\n').filter(
+      item => item.trim().length > 0
+    ).map(element => element.toLowerCase());
+
+    const d = Array.from(new Set(data))
+
+        //summary - EDD only
+        var payload = {"idList":d,"searchFlag":"PO"}
+
+        if(this.critiria == 1){
+          payload.searchFlag = "RDO"
+        }
+
+        try{
+        rdoSearch(payload).then((res) => {
+          if(res.data.code === 1){
+        this.tableData = res.data.data;
+        this.total = this.tableData.length;
+        this.loader = false;
+        this.displayResult = !this.displayResult;
+  
+          }
+        else{
+        this.loader = false;
+        this.$message.warning("no result found")
+          }
+        }) ;}catch(error){this.$message.error(error);}
+    }
+  
+  
+  private exportToCSV() {
+  const csvContent = this.convertToCSV(this.tableData);
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = 'data.csv';
+  link.click();
+  }
+  private convertToCSV(data) {
+  const header = Object.keys(data[0]).join(',');
+  const rows = data.map(row => {
+  return Object.values(row).map(value => {
+    // If the value contains a comma, enclose it in double quotes
+    if (typeof value === 'string' && value.includes(',')) {
+      return `"${value}"`;
+    } else {
+      return value;
+    }
+  }).join(',');
+  });
+  return header + '\n' + rows.join('\n');
+  }
+  
+
+  private exportToXLSX(){
+
+    const worksheet = XLSX.utils.json_to_sheet(this.tableData)
+          // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+
+    // Write the workbook to binary array
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+
+    // Create a Blob and trigger download
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
+    saveAs(blob, 'export.xlsx')
+
+  }
+
+  private goBack(clean:boolean){
+  if(clean){
+    this.ids = ''
+  }
+  this.displayResult = !this.displayResult;
+  }
+  }
+  </script>
+  
+  <style lang="scss" scoped>
+  .addBrand {
+    &-container {
+      margin: 30px;
+      margin-top: 30px;
+      .HeadLable {
+        background-color: transparent;
+        margin-bottom: 0px;
+        padding-left: 0px;
+      }
+      .container {
+        position: relative;
+        z-index: 1;
+        background: #fff;
+        padding: 30px;
+        border-radius: 4px;
+        // min-height: 500px;
+        .subBox {
+          padding-top: 30px;
+          text-align: center;
+          border-top: solid 1px $gray-5;
+        }
+      }
+      .idNumber {
+        margin-bottom: 39px;
+      }
+  
+      .el-form-item {
+        margin-bottom: 29px;
+      }
+  
+      .el-textarea{
+        width: 50%;
+      }
+      .el-input {
+        width: 100%;
+      }
+      .el-button{
+          text-align: center;
+      }
+      .loader {
+          transform: translate(-50%, -50%);
+          border: 10px solid #f3f3f3; /* Light grey */
+          border-top: 8px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 100px;
+          height: 100px;
+          animation: spin 2s linear infinite;
+      }
+  
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+    }
+  }
+  </style>

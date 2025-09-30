@@ -39,67 +39,8 @@ const router = new Router({
     {
       path: "/",
       component: Layout,
-      redirect: "/NPS",
+      redirect: "/CStock",
       children: [
-        // {
-        //   path: "dashboard",
-        //   component: () =>  import("@/views/dashboard/index.vue"),
-        //   name: "Dashboard",
-        //   meta: {
-        //     title: "工作台",
-        //     icon: "dashboard",
-        //     affix: true
-        //   }
-        // },
-		    // {
-        //   path: "/statistics",
-        //   component: () => import("@/views/statistics/index.vue"),
-        //   meta: {
-        //     title: "数据统计",
-        //     icon: "icon-statistics"
-        //   }
-        // },
-        // {
-        //   path: "order",
-        //   component: () => import("@/views/orderDetails/index.vue"),
-        //   meta: {
-        //     title: "订单管理",
-        //     icon: "icon-order"
-        //   }
-        // },
-        // {
-        //   path: "setmeal",
-        //   component: () => import("@/views/setmeal/index.vue"),
-        //   meta: {
-        //     title: "套餐管理",
-        //     icon: "icon-combo"
-        //   }
-        // },
-        // {
-        //   path: "dish",
-        //   component: () => import("@/views/dish/index.vue"),
-        //   meta: {
-        //     title: "菜品管理",
-        //     icon: "icon-dish"
-        //   }
-        // },
-        // {
-        //   path: "/dish/add",
-        //   component: () => import("@/views/dish/addDishtype.vue"),
-        //   meta: {
-        //     title: "添加菜品",
-        //     hidden: true
-        //   }
-        // },
-        
-        // {
-        //   path: "category",
-        //   component: () => import("@/views/category/index.vue"),
-        //   meta: {
-        //     title: "分类管理",
-        //     icon: "icon-category"
-        //   }
-        // },
         {
           path: "user",
           component: () => import("@/views/employee/index.vue"),
@@ -119,38 +60,46 @@ const router = new Router({
           }
         },
         
-        // {
-        //   path: "/setmeal/add",
-        //   component: () => import("@/views/setmeal/addSetmeal.vue"),
-        //   meta: {
-        //     title: "添加套餐",
-        //     hidden: true
-        //   }
-        // },
-
         {
-          path: "NPS",
-          component: () => import("@/views/NPS/index.vue"),
+          path: "CStock",
+          component: () => import("@/views/cStock/index.vue"),
           meta: {
-            title: "NPS",
+            title: "CStock",
           },
           children:[
             {
-              path: "/NPS/import",
-              component: () => import("@/views/NPS/importNPS.vue"),
+              path: "/cStock/summary",
+              component: () => import("@/views/cStock/cStockSummary.vue"),
               meta: {
-                title: "NPSImport",
+                title: "CStock Summary",
                 icon: "icon-category",
                 subgroup: true
               }
             },
             {
-              path: "/NPS/search",
-              component: () => import("@/views/NPS/npsSearch.vue"),
+              path: "/cStock/sku",
+              component: () => import("@/views/cStock/sku.vue"),
               meta: {
-                title: "NPSSearch",
+                title: "SKU",
                 icon: "icon-category",
                 subgroup:true
+              }
+            },
+            {
+              path: "/cStock/PUMI",
+              component: () => import("@/views/cStock/PUMI.vue"),
+              meta: {
+                title: "PUMI",
+                icon: "icon-category",
+                subgroup:true
+              }
+            },
+            {
+              path: "/Cstock/add",
+              component: () => import("@/views/cStock/newCStockSKU.vue"),
+              meta: {
+                title: "Edit CStock SKU",
+                hidden: true
               }
             }
           ]
@@ -203,31 +152,21 @@ const router = new Router({
         },
 
         {
-          path: "SCR",
-          component: () => import("@/views/scr/index.vue"),
+          path: "RDOVertica",
+          component: () => import("@/views/vertica/index.vue"),
           meta: {
-            title: "SCR (deprecated)",
+            title: "RDO-Vertica",
           },
           children:[
             {
-              path: "/import",
-              component: () => import("@/views/scr/importSCR.vue"),
+              path: "/rdoSearch",
+              component: () => import("@/views/vertica/RDOSearch.vue"),
               meta: {
-                title: "SCR Import",
+                title: "RDO Search",
                 icon: "icon-category",
                 subgroup: true
               }
-            },
-            {
-              path: "/result",
-              component: () => import("@/views/scr/scrResult.vue"),
-              meta: {
-                title: "SCR Summary",
-                icon: "icon-category",
-                subgroup:true
-              }
-            },
-
+            }
           ]
         },
 
