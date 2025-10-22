@@ -55,7 +55,7 @@
                 </el-table-column>
                 <el-table-column
                   prop="soId"
-                  label="SO"
+                  label="Return SO"
                   width="180">
                 </el-table-column>
                 <el-table-column
@@ -126,6 +126,16 @@
                 <el-table-column
                   prop="returnAddressId"
                   label="returnAddressId"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="soLineId"
+                  label="SOLineId"
+                  width="150">
+                </el-table-column>
+                <el-table-column
+                  prop="outboundSoId"
+                  label="OB SO"
                   width="180">
                 </el-table-column>
                 
