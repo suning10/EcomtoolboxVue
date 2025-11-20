@@ -281,7 +281,7 @@ export default class extends Vue{
   private updateTime(){
     this.loader = true
     let today = new Date().getTime() - new Date(this.datePicked).getTime();
-    today = Math.ceil(today / (1000 * 3600 * 24)); 
+    today = Math.ceil(today / (1000 * 3600 * 24)) - 1; 
     this.populateData(today.toString());
   }
 }

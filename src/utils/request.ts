@@ -8,7 +8,9 @@ const service = axios.create({
   'timeout': 600000
 })
 
+service.defaults.withCredentials = true;
 // Request interceptors
+
 service.interceptors.request.use(
   (config: any) => {
     // Add X-Access-Token header to every request, you can add other custom headers here
@@ -24,6 +26,7 @@ service.interceptors.request.use(
     Promise.reject(error)
   }
 )
+
 
 // Response interceptors
 service.interceptors.response.use(
