@@ -15,7 +15,12 @@
                     label="RDO"
                     :value=1>
                   </el-option>
+                  <el-option
+                    label="RMA"
+                    :value=2>
+                  </el-option>
                 </el-select>
+
               </el-form-item>
               <el-form-item label="PO" v-if="critiria == 0">
               <el-input type="textarea" v-model="ids" 
@@ -24,9 +29,16 @@
               >
               </el-input>
             </el-form-item>
-            <el-form-item label="RDO" v-else>
+            <el-form-item label="RDO" v-else-if="critiria == 1">
               <el-input type="textarea" v-model="ids" 
               placeholder="Please Enter RDO Number, One at a line" 
+              rows="30"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="RMA" v-else>
+              <el-input type="textarea" v-model="ids" 
+              placeholder="Please Enter RMA Number, One at a line" 
               rows="30"
               >
               </el-input>
@@ -66,6 +78,11 @@
                 <el-table-column
                   prop="rdo"
                   label="rdo"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="rmaNumber"
+                  label="RMA Number"
                   width="180">
                 </el-table-column>
                 <el-table-column
@@ -233,6 +250,12 @@
         if(this.critiria == 1){
           payload.searchFlag = "RDO"
         }
+
+        if(this.critiria == 2){
+          payload.searchFlag = "RMA"
+        }
+        
+        
 
         try{
         rdoSearch(payload).then((res) => {
