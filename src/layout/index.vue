@@ -10,6 +10,7 @@
       <navbar />
       <app-main />
     </div>
+    <chat-widget />
   </div>
 </template>
 
@@ -19,6 +20,7 @@ import { mixins } from 'vue-class-component'
 import { DeviceType, AppModule } from '@/store/modules/app'
 import { AppMain, Navbar, Sidebar } from './components'
 import ResizeMixin from './mixin/resize'
+import ChatWidget from '@/components/ChatWidget/index.vue'
 
 @Component({
   name: 'Layout',
@@ -26,6 +28,7 @@ import ResizeMixin from './mixin/resize'
     AppMain,
     Navbar,
     Sidebar,
+    ChatWidget,
   },
 })
 export default class extends mixins(ResizeMixin) {
