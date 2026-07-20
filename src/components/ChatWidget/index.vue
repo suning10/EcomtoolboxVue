@@ -99,7 +99,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { sendChatMessage, ChatMessage } from '@/api/chat'
+import { sendChatMessage, ChatResponse } from '@/api/chat'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -114,6 +114,7 @@ export default class ChatWidget extends Vue {
   private isLoading = false
   private messages: Message[] = []
   private unreadCount = 0
+  private sessionId: string | null = null
 
   private formatTime(): string {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -141,6 +142,7 @@ export default class ChatWidget extends Vue {
 
   private clearMessages() {
     this.messages = []
+    this.sessionId = null
   }
 
   private goFullPage() {
@@ -165,15 +167,10 @@ export default class ChatWidget extends Vue {
     this.$nextTick(this.scrollToBottom)
 
     try {
-      const history: ChatMessage[] = this.messages.slice(0, -1).map(m => ({
-        role: m.role,
-        content: m.content
-      }))
-      history.push({ role: 'user', content: text })
-
-      const res: any = await sendChatMessage({ messages: history })
-      const reply = res?.data?.data?.content || res?.data?.content || 'No response received.'
-      this.messages.push({ role: 'assistant', content: reply, time: this.formatTime() })
+      const res = await sendChatMessage({ message: text, session_id: this.sessionId })
+      const data = res.data as ChatResponse
+      this.sessionId = data.session_id
+      this.messages.push({ role: 'assistant', content: data.response || 'No response received.', time: this.formatTime() })
 
       if (!this.isOpen) this.unreadCount++
     } catch (err: any) {

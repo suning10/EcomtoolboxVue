@@ -1,16 +1,16 @@
 import request from '@/utils/request'
 
-export interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
+export interface ChatRequest {
+  message: string
+  session_id?: string | null
 }
 
-export interface SendMessageParams {
-  messages: ChatMessage[]
-  session_id?: string
+export interface ChatResponse {
+  response: string
+  session_id: string
 }
 
-export const sendChatMessage = (data: SendMessageParams) =>
+export const sendChatMessage = (data: ChatRequest) =>
   request({
     url: '/ai/chat',
     method: 'post',

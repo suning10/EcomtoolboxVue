@@ -76,7 +76,7 @@ import { Vue,Component} from 'vue-property-decorator'
 import * as XLSX from 'xlsx'
 import {saveAs} from 'file-saver'
 import {skuDTO} from '@/types/skuDTO'
-import { warn } from '@vue/runtime-dom';
+//import { warn } from '@vue/runtime-dom';
 
 @Component({
   name: 'CStockSKU',
