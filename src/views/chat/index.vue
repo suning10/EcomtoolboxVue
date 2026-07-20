@@ -105,7 +105,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { sendChatMessage, ChatMessage } from '@/api/chat'
+import { sendChatMessage, ChatResponse } from '@/api/chat'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -117,6 +117,7 @@ interface Conversation {
   id: string
   title: string
   messages: Message[]
+  sessionId: string | null
 }
 
 @Component({ name: 'ChatPage' })
@@ -151,7 +152,8 @@ export default class ChatPage extends Vue {
     this.conversations.unshift({
       id,
       title: 'New Conversation',
-      messages: []
+      messages: [],
+      sessionId: null
     })
     this.activeConversationId = id
   }
@@ -199,19 +201,10 @@ export default class ChatPage extends Vue {
     this.$nextTick(this.scrollToBottom)
 
     try {
-      const history: ChatMessage[] = conv.messages.slice(0, -1).map(m => ({
-        role: m.role,
-        content: m.content
-      }))
-      history.push({ role: 'user', content: text })
-
-      const res: any = await sendChatMessage({
-        messages: history,
-        conversationId: this.activeConversationId
-      })
-
-      const reply = res?.data?.data?.content || res?.data?.content || 'No response received.'
-      conv.messages.push({ role: 'assistant', content: reply, time: this.formatTime() })
+      const res = await sendChatMessage({ message: text, session_id: conv.sessionId })
+      const data = res.data as ChatResponse
+      conv.sessionId = data.session_id
+      conv.messages.push({ role: 'assistant', content: data.response || 'No response received.', time: this.formatTime() })
     } catch (err: any) {
       const errMsg = err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.'
       conv.messages.push({ role: 'assistant', content: `Error: ${errMsg}`, time: this.formatTime() })

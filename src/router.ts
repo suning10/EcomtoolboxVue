@@ -266,7 +266,7 @@ const router = new Router({
             },           
             {
               path: "/scr/scrReasearch",
-              component: () => import("@/views/scr/sCRResearch.vue"),
+              component: () => import("@/views/scr/SCRResearch.vue"),
               name:'sCRResearch',
               meta: {
                 title: "SCR Research",
