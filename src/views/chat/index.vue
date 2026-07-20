@@ -12,7 +12,7 @@
           v-for="(conv, idx) in conversations"
           :key="conv.id"
           class="conversation-item"
-          :class="{ active: activeConversationId === conv.id }"
+          :class="{ active: session_id === conv.id }"
           @click="selectConversation(conv.id)"
         >
           <i class="el-icon-chat-dot-round conversation-icon" />
@@ -124,10 +124,10 @@ export default class ChatPage extends Vue {
   private userInput = ''
   private isLoading = false
   private conversations: Conversation[] = []
-  private activeConversationId = ''
+  private session_id = ''
 
   get currentMessages(): Message[] {
-    const conv = this.conversations.find(c => c.id === this.activeConversationId)
+    const conv = this.conversations.find(c => c.id === this.session_id)
     return conv ? conv.messages : []
   }
 
@@ -153,19 +153,19 @@ export default class ChatPage extends Vue {
       title: 'New Conversation',
       messages: []
     })
-    this.activeConversationId = id
+    this.session_id = id
   }
 
   private selectConversation(id: string) {
-    this.activeConversationId = id
+    this.session_id = id
     this.$nextTick(this.scrollToBottom)
   }
 
   private deleteConversation(idx: number) {
     const conv = this.conversations[idx]
     this.conversations.splice(idx, 1)
-    if (this.activeConversationId === conv.id) {
-      this.activeConversationId = this.conversations.length > 0 ? this.conversations[0].id : ''
+    if (this.session_id === conv.id) {
+      this.session_id = this.conversations.length > 0 ? this.conversations[0].id : ''
     }
   }
 
@@ -181,11 +181,11 @@ export default class ChatPage extends Vue {
     if (!text || this.isLoading) return
 
     // Ensure an active conversation exists
-    if (!this.activeConversationId) {
+    if (!this.session_id) {
       this.startNewConversation()
     }
 
-    const conv = this.conversations.find(c => c.id === this.activeConversationId)!
+    const conv = this.conversations.find(c => c.id === this.session_id)!
     const userMsg: Message = { role: 'user', content: text, time: this.formatTime() }
     conv.messages.push(userMsg)
 
@@ -207,7 +207,7 @@ export default class ChatPage extends Vue {
 
       const res: any = await sendChatMessage({
         messages: history,
-        conversationId: this.activeConversationId
+        conversationId: this.session_id
       })
 
       const reply = res?.data?.data?.content || res?.data?.content || 'No response received.'

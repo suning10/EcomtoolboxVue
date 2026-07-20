@@ -7,7 +7,7 @@ export interface ChatMessage {
 
 export interface SendMessageParams {
   messages: ChatMessage[]
-  conversationId?: string
+  session_id?: string
 }
 
 export const sendChatMessage = (data: SendMessageParams) =>

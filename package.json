@@ -41,6 +41,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@types/jest": "^24.0.18",
     "@types/js-cookie": "^2.2.2",
     "@types/nprogress": "^0.2.0",
