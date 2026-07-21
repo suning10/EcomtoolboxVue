@@ -226,7 +226,7 @@ export default class ChatPage extends Vue {
   }
 
   mounted() {
-    this.startNewConversation()
+    this.loadSessions()
   }
 }
 </script>
