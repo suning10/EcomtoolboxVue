@@ -22,7 +22,10 @@
             @click.stop="deleteConversation(idx)"
           />
         </div>
-        <div v-if="conversations.length === 0" class="no-conversations">
+        <div v-if="isSessionsLoading" class="no-conversations">
+          Loading…
+        </div>
+        <div v-else-if="conversations.length === 0" class="no-conversations">
           No conversations yet
         </div>
       </div>
@@ -105,7 +108,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { sendChatMessage, ChatResponse } from '@/api/chat'
+import { sendChatMessage, ChatResponse, getChatSessions } from '@/api/chat'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -222,9 +225,9 @@ export default class ChatPage extends Vue {
     if (el) el.scrollTop = el.scrollHeight
   }
 
-  mounted() {
-    this.startNewConversation()
-  }
+  // mounted() {
+  //   getChatSessions()
+  // }
 }
 </script>
 
