@@ -108,7 +108,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { sendChatMessage, ChatResponse } from '@/api/chat'
+import { sendChatMessage, getChatSessions, getChatSessionMessages, ChatResponse, ChatSessionRead, ChatSessionMessages } from '@/api/chat'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -121,12 +121,14 @@ interface Conversation {
   title: string
   messages: Message[]
   sessionId: string | null
+  messagesLoaded: boolean
 }
 
 @Component({ name: 'ChatPage' })
 export default class ChatPage extends Vue {
   private userInput = ''
   private isLoading = false
+  private isSessionsLoading = false
   private conversations: Conversation[] = []
   private session_id = ''
 
@@ -150,21 +152,67 @@ export default class ChatPage extends Vue {
       .replace(/\n/g, '<br>')
   }
 
+  private async loadSessions() {
+    this.isSessionsLoading = true
+    try {
+      const res = await getChatSessions()
+      const sessions = res.data as ChatSessionRead[]
+      this.conversations = sessions.map(s => ({
+        id: s.id,
+        title: s.title || 'New Conversation',
+        messages: [],
+        sessionId: s.id,
+        messagesLoaded: false
+      }))
+    } catch (err) {
+      this.conversations = []
+    } finally {
+      this.isSessionsLoading = false
+    }
+
+    if (this.conversations.length > 0) {
+      await this.selectConversation(this.conversations[0].id)
+    } else {
+      this.startNewConversation()
+    }
+  }
+
+  private async loadConversationMessages(conv: Conversation) {
+    if (conv.messagesLoaded || !conv.sessionId) return
+    this.isLoading = true
+    try {
+      const res = await getChatSessionMessages(conv.sessionId)
+      const data = res.data as ChatSessionMessages
+      conv.messages = data.messages.map(m => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.content,
+        time: ''
+      }))
+      conv.messagesLoaded = true
+    } catch (err) {
+      conv.messagesLoaded = true
+    } finally {
+      this.isLoading = false
+    }
+  }
+
   private startNewConversation() {
-    const id = `conv_${Date.now()}`
+    const id = `local_${Date.now()}`
     this.conversations.unshift({
       id,
       title: 'New Conversation',
       messages: [],
-      sessionId: null
+      sessionId: null,
+      messagesLoaded: true
     })
-    console.log(this.session_id)
     this.session_id = id
   }
 
-  private selectConversation(id: string) {
+  private async selectConversation(id: string) {
     this.session_id = id
-    console.log(id)
+    this.$nextTick(this.scrollToBottom)
+    const conv = this.conversations.find(c => c.id === id)
+    if (conv) await this.loadConversationMessages(conv)
     this.$nextTick(this.scrollToBottom)
   }
 
@@ -206,9 +254,13 @@ export default class ChatPage extends Vue {
     this.$nextTick(this.scrollToBottom)
 
     try {
-      console.log(conv.id)
-      const res = await sendChatMessage({ message: text, session_id: conv.id })
+      const res = await sendChatMessage({ message: text, session_id: conv.sessionId })
       const data = res.data as ChatResponse
+      if (!conv.sessionId) {
+        // reconcile the local placeholder id with the real backend session id
+        conv.id = data.session_id
+        this.session_id = conv.id
+      }
       conv.sessionId = data.session_id
       conv.messages.push({ role: 'assistant', content: data.response || 'No response received.', time: this.formatTime() })
     } catch (err: any) {
