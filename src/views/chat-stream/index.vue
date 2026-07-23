@@ -59,12 +59,16 @@
           </div>
           <div class="message-bubble">
             <div class="message-content" v-html="formatMessage(msg.content)" />
+            <span
+              v-if="isStreaming && idx === currentMessages.length - 1 && msg.role === 'assistant'"
+              class="stream-cursor"
+            />
             <div class="message-time">{{ msg.time }}</div>
           </div>
         </div>
 
-        <!-- Typing indicator -->
-        <div v-if="isLoading" class="message-row assistant">
+        <!-- Waiting-for-first-token indicator -->
+        <div v-if="isWaitingForStream" class="message-row assistant">
           <div class="message-avatar">
             <span class="avatar-ai">AI</span>
           </div>
@@ -87,17 +91,25 @@
             :autosize="{ minRows: 1, maxRows: 6 }"
             placeholder="Message AI..."
             class="chat-input"
-            :disabled="isLoading"
+            :disabled="isStreaming"
             @keydown.native="handleKeydown"
           />
           <button
+            v-if="isStreaming"
             class="send-btn"
-            :class="{ disabled: !userInput.trim() || isLoading }"
-            :disabled="!userInput.trim() || isLoading"
+            title="Stop generating"
+            @click="stopStreaming"
+          >
+            <i class="el-icon-video-pause" />
+          </button>
+          <button
+            v-else
+            class="send-btn"
+            :class="{ disabled: !userInput.trim() }"
+            :disabled="!userInput.trim()"
             @click="sendMessage"
           >
-            <i v-if="!isLoading" class="el-icon-s-promotion" />
-            <i v-else class="el-icon-loading" />
+            <i class="el-icon-s-promotion" />
           </button>
         </div>
         <p class="input-hint">Press Enter to send · Shift+Enter for new line</p>
@@ -107,8 +119,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import { sendChatMessage, getChatSessions, getChatSessionMessages, ChatResponse, ChatSessionRead, ChatSessionMessages } from '@/api/chat'
+import { Component, Vue } from 'vue-property-decorator'
+import { streamChatMessage, getChatSessions, getChatSessionMessages, ChatSessionRead, ChatSessionMessages } from '@/api/chat'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -124,13 +136,15 @@ interface Conversation {
   messagesLoaded: boolean
 }
 
-@Component({ name: 'ChatPage' })
-export default class ChatPage extends Vue {
+@Component({ name: 'ChatStreamPage' })
+export default class ChatStreamPage extends Vue {
   private userInput = ''
-  private isLoading = false
   private isSessionsLoading = false
+  private isStreaming = false
+  private isWaitingForStream = false
   private conversations: Conversation[] = []
   private session_id = ''
+  private abortController: AbortController | null = null
 
   get currentMessages(): Message[] {
     const conv = this.conversations.find(c => c.id === this.session_id)
@@ -179,7 +193,6 @@ export default class ChatPage extends Vue {
 
   private async loadConversationMessages(conv: Conversation) {
     if (conv.messagesLoaded || !conv.sessionId) return
-    this.isLoading = true
     try {
       const res = await getChatSessionMessages(conv.sessionId)
       const data = res.data as ChatSessionMessages
@@ -191,8 +204,6 @@ export default class ChatPage extends Vue {
       conv.messagesLoaded = true
     } catch (err) {
       conv.messagesLoaded = true
-    } finally {
-      this.isLoading = false
     }
   }
 
@@ -209,6 +220,7 @@ export default class ChatPage extends Vue {
   }
 
   private async selectConversation(id: string) {
+    if (this.isStreaming) return
     this.session_id = id
     this.$nextTick(this.scrollToBottom)
     const conv = this.conversations.find(c => c.id === id)
@@ -231,43 +243,75 @@ export default class ChatPage extends Vue {
     }
   }
 
+  private stopStreaming() {
+    if (this.abortController) this.abortController.abort()
+  }
+
   private async sendMessage() {
     const text = this.userInput.trim()
-    if (!text || this.isLoading) return
+    if (!text || this.isStreaming) return
 
-    // Ensure an active conversation exists
     if (!this.session_id) {
       this.startNewConversation()
     }
 
     const conv = this.conversations.find(c => c.id === this.session_id)!
-    const userMsg: Message = { role: 'user', content: text, time: this.formatTime() }
-    conv.messages.push(userMsg)
+    conv.messages.push({ role: 'user', content: text, time: this.formatTime() })
 
-    // Set title from first message
-    if (conv.messages.length === 1) {
+    if (conv.messages.filter(m => m.role === 'user').length === 1) {
       conv.title = text.length > 40 ? text.slice(0, 40) + '…' : text
     }
 
     this.userInput = ''
-    this.isLoading = true
+    this.isStreaming = true
+    this.isWaitingForStream = true
     this.$nextTick(this.scrollToBottom)
 
+    const assistantMsg: Message = { role: 'assistant', content: '', time: this.formatTime() }
+    let pushedAssistantMsg = false
+    this.abortController = new AbortController()
+
     try {
-      const res = await sendChatMessage({ message: text, session_id: conv.sessionId })
-      const data = res.data as ChatResponse
-      if (!conv.sessionId) {
-        // reconcile the local placeholder id with the real backend session id
-        conv.id = data.session_id
-        this.session_id = conv.id
-      }
-      conv.sessionId = data.session_id
-      conv.messages.push({ role: 'assistant', content: data.response || 'No response received.', time: this.formatTime() })
+      await streamChatMessage(
+        { message: text, session_id: conv.sessionId },
+        {
+          onSession: (sessionId) => {
+            if (!conv.sessionId) {
+              conv.id = sessionId
+              this.session_id = conv.id
+            }
+            conv.sessionId = sessionId
+          },
+          onToken: (content) => {
+            if (!pushedAssistantMsg) {
+              conv.messages.push(assistantMsg)
+              pushedAssistantMsg = true
+              this.isWaitingForStream = false
+            }
+            assistantMsg.content += content
+            this.$nextTick(this.scrollToBottom)
+          },
+          onError: (detail) => {
+            if (!pushedAssistantMsg) {
+              conv.messages.push(assistantMsg)
+              pushedAssistantMsg = true
+            }
+            assistantMsg.content += `\n\nError: ${detail}`
+          }
+        },
+        this.abortController.signal
+      )
     } catch (err: any) {
-      const errMsg = err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.'
-      conv.messages.push({ role: 'assistant', content: `Error: ${errMsg}`, time: this.formatTime() })
+      if (err?.name !== 'AbortError') {
+        if (!pushedAssistantMsg) {
+          conv.messages.push(assistantMsg)
+        }
+        assistantMsg.content += `\n\nError: ${err?.message || 'Something went wrong.'}`
+      }
     } finally {
-      this.isLoading = false
+      this.isStreaming = false
+      this.isWaitingForStream = false
+      this.abortController = null
       this.$nextTick(this.scrollToBottom)
     }
   }
@@ -512,6 +556,21 @@ export default class ChatPage extends Vue {
     font-family: 'SFMono-Regular', Consolas, monospace;
     font-size: 13px;
   }
+}
+
+.stream-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  margin-left: 24px;
+  background: #343744;
+  animation: blink 0.9s infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 .message-time {

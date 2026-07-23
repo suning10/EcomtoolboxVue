@@ -249,7 +249,16 @@ const router = new Router({
                 title: "AI Chat",
                 icon: "icon-order"
               }
-            }]
+            },
+            {
+              path: "chat-stream",
+              component: () => import("@/views/chat-stream/index.vue"),
+              meta: {
+                title: "AI Chat stream",
+                icon: "icon-order"
+              }
+            }
+          ]
         },
 
         {
