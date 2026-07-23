@@ -296,6 +296,15 @@ const router = new Router({
         },
 
         {
+          path: "chat-stream",
+          component: () => import("@/views/chat-stream/index.vue"),
+          meta: {
+            title: "AI Chat (Stream)",
+            icon: "icon-order"
+          }
+        },
+
+        {
           path: "Vertica",
           component: () => import("@/views/vertica/index.vue"),
           meta: {
