@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/requestAI'
 import { UserModule } from '@/store/modules/user'
 
 export interface ChatRequest {
@@ -50,7 +50,10 @@ export const getChatSessionMessages = (sessionId: string) =>
 
 export interface ChatStreamHandlers {
   onSession?: (sessionId: string) => void
+  onReasoning?: (content: string) => void
   onToken?: (content: string) => void
+  onToolCall?: (tool: string) => void
+  onToolResult?: (tool: string, content: string) => void
   onDone?: (response: string) => void
   onError?: (detail: string) => void
 }
@@ -59,7 +62,7 @@ export interface ChatStreamHandlers {
 // EventSource API (GET-only) can't be used — parse the "event: ...\ndata: ...\n\n"
 // frames off the fetch response stream by hand instead.
 export async function streamChatMessage(data: ChatRequest, handlers: ChatStreamHandlers, signal?: AbortSignal) {
-  const res = await fetch(`${process.env.VUE_APP_BASE_API}/ai/chat/stream`, {
+  const res = await fetch(`${process.env.VUE_APP_AI_URL}/ai/chat/stream`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -98,8 +101,17 @@ export async function streamChatMessage(data: ChatRequest, handlers: ChatStreamH
         case 'session':
           handlers.onSession?.(payload.session_id)
           break
+        case 'reasoning':
+          handlers.onReasoning?.(payload.content)
+          break
         case 'token':
           handlers.onToken?.(payload.content)
+          break
+        case 'tool_call':
+          handlers.onToolCall?.(payload.tool)
+          break
+        case 'tool_result':
+          handlers.onToolResult?.(payload.tool, payload.content)
           break
         case 'done':
           handlers.onDone?.(payload.response)

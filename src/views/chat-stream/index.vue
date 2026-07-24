@@ -33,6 +33,12 @@
 
     <!-- Main Chat Area -->
     <div class="chat-main">
+      <!-- Toolbar -->
+      <div class="chat-toolbar">
+        <el-switch v-model="showReasoning" active-color="#343744" />
+        <span class="toolbar-label">Show reasoning &amp; tool calls</span>
+      </div>
+
       <!-- Messages -->
       <div ref="messageArea" class="message-area">
         <!-- Empty state -->
@@ -58,7 +64,32 @@
             </span>
           </div>
           <div class="message-bubble">
-            <div class="message-content" v-html="formatMessage(msg.content)" />
+            <div
+              v-if="showReasoning && msg.role === 'assistant' && msg.toolCalls && msg.toolCalls.length"
+              class="message-tools"
+            >
+              <div v-for="(tc, tIdx) in msg.toolCalls" :key="tIdx" class="tool-call-item">
+                <i class="el-icon-cpu" />
+                <span class="tool-call-name">{{ tc.tool }}</span>
+                <span v-if="!tc.done" class="tool-call-status running">running…</span>
+                <span v-else class="tool-call-status done">done</span>
+                <div v-if="tc.done && tc.content" class="tool-call-result">{{ tc.content }}</div>
+              </div>
+            </div>
+            <div
+              v-if="showReasoning && msg.role === 'assistant' && msg.reasoning"
+              class="message-reasoning"
+            >
+              <div class="reasoning-label">Reasoning</div>
+              <div class="reasoning-content" v-html="formatMessage(msg.reasoning)" />
+            </div>
+            <div v-if="msg.content" class="message-content" v-html="formatMessage(msg.content)" />
+            <div
+              v-else-if="isStreaming && idx === currentMessages.length - 1"
+              class="typing-indicator"
+            >
+              <span /><span /><span />
+            </div>
             <span
               v-if="isStreaming && idx === currentMessages.length - 1 && msg.role === 'assistant'"
               class="stream-cursor"
@@ -122,9 +153,17 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { streamChatMessage, getChatSessions, getChatSessionMessages, ChatSessionRead, ChatSessionMessages } from '@/api/chat'
 
+interface ToolCallEntry {
+  tool: string
+  content: string
+  done: boolean
+}
+
 interface Message {
   role: 'user' | 'assistant'
   content: string
+  reasoning?: string
+  toolCalls?: ToolCallEntry[]
   time: string
 }
 
@@ -142,6 +181,7 @@ export default class ChatStreamPage extends Vue {
   private isSessionsLoading = false
   private isStreaming = false
   private isWaitingForStream = false
+  private showReasoning = false
   private conversations: Conversation[] = []
   private session_id = ''
   private abortController: AbortController | null = null
@@ -267,8 +307,15 @@ export default class ChatStreamPage extends Vue {
     this.isWaitingForStream = true
     this.$nextTick(this.scrollToBottom)
 
-    const assistantMsg: Message = { role: 'assistant', content: '', time: this.formatTime() }
+    const assistantMsg: Message = { role: 'assistant', content: '', reasoning: '', toolCalls: [], time: this.formatTime() }
     let pushedAssistantMsg = false
+    const ensurePushed = () => {
+      if (!pushedAssistantMsg) {
+        conv.messages.push(assistantMsg)
+        pushedAssistantMsg = true
+        this.isWaitingForStream = false
+      }
+    }
     this.abortController = new AbortController()
 
     try {
@@ -282,20 +329,32 @@ export default class ChatStreamPage extends Vue {
             }
             conv.sessionId = sessionId
           },
+          onReasoning: (content) => {
+            ensurePushed()
+            assistantMsg.reasoning += content
+            this.$nextTick(this.scrollToBottom)
+          },
           onToken: (content) => {
-            if (!pushedAssistantMsg) {
-              conv.messages.push(assistantMsg)
-              pushedAssistantMsg = true
-              this.isWaitingForStream = false
-            }
+            ensurePushed()
             assistantMsg.content += content
             this.$nextTick(this.scrollToBottom)
           },
-          onError: (detail) => {
-            if (!pushedAssistantMsg) {
-              conv.messages.push(assistantMsg)
-              pushedAssistantMsg = true
+          onToolCall: (tool) => {
+            ensurePushed()
+            assistantMsg.toolCalls!.push({ tool, content: '', done: false })
+            this.$nextTick(this.scrollToBottom)
+          },
+          onToolResult: (tool, content) => {
+            ensurePushed()
+            const pending = assistantMsg.toolCalls!.slice().reverse().find(t => t.tool === tool && !t.done)
+            if (pending) {
+              pending.content = content
+              pending.done = true
             }
+            this.$nextTick(this.scrollToBottom)
+          },
+          onError: (detail) => {
+            ensurePushed()
             assistantMsg.content += `\n\nError: ${detail}`
           }
         },
@@ -437,6 +496,22 @@ export default class ChatStreamPage extends Vue {
   background: #fff;
 }
 
+/* ─── Toolbar ─── */
+.chat-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 24px;
+  border-bottom: 1px solid #ebeef5;
+  flex-shrink: 0;
+}
+
+.toolbar-label {
+  font-size: 12px;
+  color: #8a94a6;
+}
+
 /* ─── Messages ─── */
 .message-area {
   flex: 1;
@@ -556,6 +631,68 @@ export default class ChatStreamPage extends Vue {
     font-family: 'SFMono-Regular', Consolas, monospace;
     font-size: 13px;
   }
+}
+
+.message-tools {
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tool-call-item {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #eef1f7;
+  border: 1px solid #dde3ee;
+  font-size: 12px;
+}
+
+.tool-call-name {
+  font-weight: 600;
+  color: #343744;
+  margin-right: 6px;
+}
+
+.tool-call-status {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &.running { color: #e6a23c; }
+  &.done { color: #67c23a; }
+}
+
+.tool-call-result {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.message-reasoning {
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #f9f5e8;
+  border: 1px solid #f0e4bc;
+}
+
+.reasoning-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #b08a2e;
+  margin-bottom: 4px;
+}
+
+.reasoning-content {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #6b6250;
+  word-break: break-word;
 }
 
 .stream-cursor {
