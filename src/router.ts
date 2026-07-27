@@ -242,14 +242,14 @@ const router = new Router({
             title: "AI",
           },
           children:[
-            {
-              path: "chat",
-              component: () => import("@/views/chat/index.vue"),
-              meta: {
-                title: "AI Chat",
-                icon: "icon-order"
-              }
-            },
+            // {
+            //   path: "chat",
+            //   component: () => import("@/views/chat/index.vue"),
+            //   meta: {
+            //     title: "AI Chat",
+            //     icon: "icon-order"
+            //   }
+            // },
             {
               path: "chat-stream",
               component: () => import("@/views/chat-stream/index.vue"),
