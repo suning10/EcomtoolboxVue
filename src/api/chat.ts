@@ -4,6 +4,7 @@ import { UserModule } from '@/store/modules/user'
 export interface ChatRequest {
   message: string
   session_id?: string | null
+  include_reasoning?: string | false
 }
 
 export interface ChatResponse {
@@ -90,8 +91,8 @@ export async function streamChatMessage(data: ChatRequest, handlers: ChatStreamH
       const rawEvent = buffer.slice(0, sepIndex)
       buffer = buffer.slice(sepIndex + 2)
 
-      const eventMatch = rawEvent.match(/^event: (.*)$/m)
-      const dataMatch = rawEvent.match(/^data: (.*)$/m)
+      const eventMatch = rawEvent.match(/^event:\s?(.*)$/m)
+      const dataMatch = rawEvent.match(/^data:\s?(.*)$/m)
       if (!eventMatch || !dataMatch) continue
 
       const eventName = eventMatch[1].trim()

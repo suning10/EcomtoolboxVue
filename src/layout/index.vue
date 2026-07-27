@@ -6,11 +6,12 @@
       @click="handleClickOutside"
     />
     <sidebar class="sidebar-container" />
+    <chat-widget />
     <div class="main-container">
       <navbar />
       <app-main />
     </div>
-    <chat-widget />
+
   </div>
 </template>
 

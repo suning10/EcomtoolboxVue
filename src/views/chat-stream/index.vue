@@ -292,6 +292,7 @@ export default class ChatStreamPage extends Vue {
     if (!text || this.isStreaming) return
 
     if (!this.session_id) {
+      console.log("start a new conversation when send message")
       this.startNewConversation()
     }
 
@@ -320,7 +321,7 @@ export default class ChatStreamPage extends Vue {
 
     try {
       await streamChatMessage(
-        { message: text, session_id: conv.sessionId },
+        { message: text, session_id: conv.sessionId, include_reasoning: this.showReasoning? 'true':'false'},
         {
           onSession: (sessionId) => {
             if (!conv.sessionId) {
