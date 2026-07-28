@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-widget">
+  <div v-if="!hideWidget" class="chat-widget">
     <!-- Floating toggle button -->
     <transition name="bubble">
       <button
@@ -115,6 +115,10 @@ export default class ChatWidget extends Vue {
   private messages: Message[] = []
   private unreadCount = 0
   private sessionId: string | null = null
+
+  get hideWidget(): boolean {
+    return !!this.$route.meta?.hideChatWidget
+  }
 
   private formatTime(): string {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

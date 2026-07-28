@@ -161,7 +161,8 @@ const router = new Router({
               component: () => import("@/views/chat/index.vue"),
               meta: {
                 title: "AI Chat",
-                icon: "icon-order"
+                icon: "icon-order",
+                hideChatWidget: true
               }
             },
             {
@@ -169,7 +170,8 @@ const router = new Router({
               component: () => import("@/views/chat-stream/index.vue"),
               meta: {
                 title: "AI Chat stream",
-                icon: "icon-order"
+                icon: "icon-order",
+                hideChatWidget: true
               }
             }
           ]

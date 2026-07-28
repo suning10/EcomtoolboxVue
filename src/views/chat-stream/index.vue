@@ -151,7 +151,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { streamChatMessage, getChatSessions, getChatSessionMessages, ChatSessionRead, ChatSessionMessages } from '@/api/chat'
+import { streamChatMessage, getChatSessions, getChatSessionMessages, deleteChatSession, ChatSessionRead, ChatSessionMessages } from '@/api/chat'
 
 interface ToolCallEntry {
   tool: string
@@ -268,8 +268,15 @@ export default class ChatStreamPage extends Vue {
     this.$nextTick(this.scrollToBottom)
   }
 
-  private deleteConversation(idx: number) {
+  private async deleteConversation(idx: number) {
     const conv = this.conversations[idx]
+    if (conv.sessionId) {
+      try {
+        await deleteChatSession(conv.sessionId)
+      } catch (err) {
+        return
+      }
+    }
     this.conversations.splice(idx, 1)
     if (this.session_id === conv.id) {
       this.session_id = this.conversations.length > 0 ? this.conversations[0].id : ''
@@ -292,6 +299,7 @@ export default class ChatStreamPage extends Vue {
     if (!text || this.isStreaming) return
 
     if (!this.session_id) {
+      console.log("start a new conversation when send message")
       this.startNewConversation()
     }
 
@@ -320,7 +328,7 @@ export default class ChatStreamPage extends Vue {
 
     try {
       await streamChatMessage(
-        { message: text, session_id: conv.sessionId },
+        { message: text, session_id: conv.sessionId, include_reasoning: this.showReasoning? 'true':'false'},
         {
           onSession: (sessionId) => {
             if (!conv.sessionId) {
