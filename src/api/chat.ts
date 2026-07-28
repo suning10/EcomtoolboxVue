@@ -49,6 +49,12 @@ export const getChatSessionMessages = (sessionId: string) =>
     method: 'get'
   })
 
+export const deleteChatSession = (sessionId: string) =>
+  request({
+    url: `/ai/chat/sessions/${sessionId}`,
+    method: 'delete'
+  })
+
 export interface ChatStreamHandlers {
   onSession?: (sessionId: string) => void
   onReasoning?: (content: string) => void

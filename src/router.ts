@@ -60,50 +60,7 @@ const router = new Router({
           }
         },
         
-        {
-          path: "CStock",
-          component: () => import("@/views/cStock/index.vue"),
-          meta: {
-            title: "CStock",
-          },
-          children:[
-            {
-              path: "/cStock/summary",
-              component: () => import("@/views/cStock/cStockSummary.vue"),
-              meta: {
-                title: "CStock Summary",
-                icon: "icon-category",
-                subgroup: true
-              }
-            },
-            {
-              path: "/cStock/sku",
-              component: () => import("@/views/cStock/sku.vue"),
-              meta: {
-                title: "SKU",
-                icon: "icon-category",
-                subgroup:true
-              }
-            },
-            {
-              path: "/cStock/PUMI",
-              component: () => import("@/views/cStock/PUMI.vue"),
-              meta: {
-                title: "PUMI",
-                icon: "icon-category",
-                subgroup:true
-              }
-            },
-            {
-              path: "/Cstock/add",
-              component: () => import("@/views/cStock/newCStockSKU.vue"),
-              meta: {
-                title: "Edit CStock SKU",
-                hidden: true
-              }
-            }
-          ]
-        },
+       
 
         {
           path: "AgedReturn",
@@ -151,24 +108,7 @@ const router = new Router({
           ]
         },
 
-        {
-          path: "RDOVertica",
-          component: () => import("@/views/vertica/index.vue"),
-          meta: {
-            title: "RDO-Vertica",
-          },
-          children:[
-            {
-              path: "/rdoSearch",
-              component: () => import("@/views/vertica/RDOSearch.vue"),
-              meta: {
-                title: "RDO Search",
-                icon: "icon-category",
-                subgroup: true
-              }
-            }
-          ]
-        },
+        
 
         {
           path: "SCR Research",
@@ -204,34 +144,8 @@ const router = new Router({
                 title: "SCR Research",
                 hidden: true
               }
-            },
-            {
-              path: "/dod",
-              component: () => import("@/views/scr/dodResearch.vue"),
-              meta: {
-                title: "DOD Research",
-                icon: "icon-category",
-                subgroup:true
-              }
-            },
-            {
-              path: "/missingTransactions",
-              component: () => import("@/views/scr/scrMissingTransaction.vue"),
-              meta: {
-                title: "MissingTransactions",
-                icon: "icon-category",
-                subgroup:true
-              }
-            },
-            {
-              path: "/history",
-              component: () => import("@/views/scr/scrHistory.vue"),
-              meta: {
-                title: "SCR Trend",
-                icon: "icon-category",
-                subgroup:true
-              }
             }
+            
           ]
         },
 
@@ -247,7 +161,8 @@ const router = new Router({
             //   component: () => import("@/views/chat/index.vue"),
             //   meta: {
             //     title: "AI Chat",
-            //     icon: "icon-order"
+            //     icon: "icon-order",
+            //     hideChatWidget: true
             //   }
             // },
             {
@@ -255,7 +170,8 @@ const router = new Router({
               component: () => import("@/views/chat-stream/index.vue"),
               meta: {
                 title: "AI Chat stream",
-                icon: "icon-order"
+                icon: "icon-order",
+                hideChatWidget: true
               }
             }
           ]
@@ -303,16 +219,6 @@ const router = new Router({
               component: () => import("@/views/vertica/EDD.vue"),
               meta: {
                 title: "EDD",
-                icon: "icon-category",
-                subgroup:true
-              }
-            },
-
-            {
-              path: "/eddCE",
-              component: () => import("@/views/vertica/EDDCE.vue"),
-              meta: {
-                title: "EDDCE",
                 icon: "icon-category",
                 subgroup:true
               }

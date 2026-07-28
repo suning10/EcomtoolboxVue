@@ -32,7 +32,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: any) => {
     // console.log(response, 'response')
-    if (response.data.status === 401) {
+    if (response.data && response.data.status === 401) {
       console.log(response.config.url)
       console.log(response)
       router.push('/login')
@@ -42,9 +42,6 @@ service.interceptors.response.use(
     // 请求完成，删除请求中状态
     const key = getRequestKey(response.config);
     removePending(key);
-    if (response.data.code === 1) {
-      return response
-    }
     return response
   },
   (error: any) => {
