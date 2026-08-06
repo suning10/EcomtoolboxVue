@@ -151,7 +151,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import { streamChatMessage, getChatSessions, getChatSessionMessages, deleteChatSession, ChatSessionRead, ChatSessionMessages } from '@/api/chat'
+
+marked.setOptions({ breaks: true, gfm: true })
 
 interface ToolCallEntry {
   tool: string
@@ -197,13 +201,8 @@ export default class ChatStreamPage extends Vue {
   }
 
   private formatMessage(content: string): string {
-    return content
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/\n/g, '<br>')
+    const html = marked.parse(content) as string
+    return DOMPurify.sanitize(html)
   }
 
   private async loadSessions() {
@@ -578,6 +577,24 @@ export default class ChatStreamPage extends Vue {
       background: #343744;
       color: #fff;
       border-radius: 18px 4px 18px 18px;
+
+      ::v-deep th,
+      ::v-deep td {
+        border-color: rgba(255,255,255,0.25);
+      }
+
+      ::v-deep th {
+        background: rgba(255,255,255,0.1);
+      }
+
+      ::v-deep blockquote {
+        border-left-color: rgba(255,255,255,0.3);
+      }
+
+      ::v-deep pre,
+      ::v-deep code {
+        background: rgba(255,255,255,0.15);
+      }
     }
 
     .message-time { text-align: right; }
@@ -638,6 +655,58 @@ export default class ChatStreamPage extends Vue {
     border-radius: 3px;
     font-family: 'SFMono-Regular', Consolas, monospace;
     font-size: 13px;
+  }
+
+  ::v-deep pre {
+    background: rgba(0,0,0,0.08);
+    padding: 10px 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+
+    code {
+      background: none;
+      padding: 0;
+    }
+  }
+
+  ::v-deep p {
+    margin: 0 0 8px;
+
+    &:last-child { margin-bottom: 0; }
+  }
+
+  ::v-deep ul,
+  ::v-deep ol {
+    margin: 0 0 8px;
+    padding-left: 20px;
+  }
+
+  ::v-deep table {
+    border-collapse: collapse;
+    margin: 4px 0 8px;
+    font-size: 13px;
+    display: block;
+    overflow-x: auto;
+  }
+
+  ::v-deep th,
+  ::v-deep td {
+    border: 1px solid rgba(0,0,0,0.15);
+    padding: 6px 10px;
+    text-align: left;
+  }
+
+  ::v-deep th {
+    background: rgba(0,0,0,0.05);
+    font-weight: 600;
+  }
+
+  ::v-deep blockquote {
+    margin: 0 0 8px;
+    padding-left: 10px;
+    border-left: 3px solid rgba(0,0,0,0.15);
+    color: inherit;
+    opacity: 0.85;
   }
 }
 

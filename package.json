@@ -17,9 +17,11 @@
     "@types/webpack": "^4.41.12",
     "area-data": "^5.0.6",
     "axios": "^0.27.2",
+    "dompurify": "^2.5.9",
     "echarts": "^5.3.2",
     "element-ui": "^2.12.0",
     "js-cookie": "^2.2.1",
+    "marked": "^4.3.0",
     "md5": "^2.3.0",
     "moment": "^2.24.0",
     "normalize.css": "^8.0.1",
@@ -38,6 +40,7 @@
     "vuex-persistedstate": "^2.7.0"
   },
   "devDependencies": {
+    "@types/dompurify": "^2.4.0",
     "@types/jest": "^24.0.18",
     "@types/js-cookie": "^2.2.2",
     "@types/nprogress": "^0.2.0",
